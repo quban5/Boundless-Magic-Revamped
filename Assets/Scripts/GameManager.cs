@@ -4,6 +4,19 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
     [Header("Prefabs")]
     [SerializeField] private GameObject obstaclePrefab;
     [SerializeField] private GameObject enemyPrefab;
@@ -17,6 +30,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float spawnXOffset;
     [SerializeField] private float spawnObstacleYOffset;
     [SerializeField] private float spawnEnemyYOffset;
+
+    [Header("Other")]
+    [SerializeField] private float score;
 
     void Start()
     {
@@ -45,12 +61,24 @@ public class GameManager : MonoBehaviour
             float spawnPosY = ground.transform.position.y + spawnObstacleYOffset;
             Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
             Instantiate(obstaclePrefab, spawnPos, transform.rotation);
-        } else {
+        }
+        else
+        {
             float spawnPosY = ground.transform.position.y + spawnEnemyYOffset;
             Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
             Instantiate(enemyPrefab, spawnPos, transform.rotation);
         }
 
         StartCoroutine(SpawnTimer());
+    }
+
+    public void AddScore(float score)
+    {
+        this.score += score;
+    }
+
+    public float GetScore()
+    {
+        return score;
     }
 }
