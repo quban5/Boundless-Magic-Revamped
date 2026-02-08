@@ -4,14 +4,11 @@ public class PlayerScript : MonoBehaviour
 {
     //Components
     private Rigidbody2D rb;
-
     [SerializeField] private GameObject projectilePrefab;
-
     [SerializeField] private float horizontalSpeed;
-
     [SerializeField] private float jumpForce;
-
     private bool isGrounded;
+    [SerializeField] private float speedIncrease;
 
     void Start()
     {
@@ -22,6 +19,8 @@ public class PlayerScript : MonoBehaviour
     {
         Movement();
         Shooting();
+
+        horizontalSpeed += Time.deltaTime * speedIncrease;
     }
 
     private void Movement()
@@ -40,7 +39,11 @@ public class PlayerScript : MonoBehaviour
     {
         if (PlayerInputManager.Instance.ShootClicked)
         {
-            Instantiate(projectilePrefab,transform.position,transform.rotation);
+            if (GameManager.Instance.GetAmmo() > 0)
+            {
+                GameManager.Instance.AddAmmo(-1);
+                Instantiate(projectilePrefab, transform.position, transform.rotation);
+            }
         }
     }
 
