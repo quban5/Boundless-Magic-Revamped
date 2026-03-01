@@ -78,6 +78,7 @@ public class PlayerScript : MonoBehaviour
             projectileScript.addSpeed(horizontalSpeed);
         }
     }
+    private Coroutine invincibilityCoroutine;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -94,15 +95,44 @@ public class PlayerScript : MonoBehaviour
 
     public void StartInvincibility()
     {
-        invincible = true;
-        renderer.color = Color.brown;
-        StartCoroutine(InvincibilityTimer());
+        if (invincibilityCoroutine != null)
+        {
+            StopCoroutine(invincibilityCoroutine);
+        }
+
+        invincibilityCoroutine = StartCoroutine(InvincibilityTimer());
     }
 
     IEnumerator InvincibilityTimer()
     {
-        yield return new WaitForSeconds(invincibilityDuration);
+        invincible = true;
+        renderer.color = Color.gray;
+
+        float warningDuration = 2f;
+        float blinkInterval = 0.2f; 
+
+        if (invincibilityDuration > warningDuration)
+        {
+            yield return new WaitForSeconds(invincibilityDuration - warningDuration);
+        }
+
+ 
+        float elapsed = 0f;
+        while (elapsed < warningDuration)
+        {
+         
+            if (renderer.color == Color.gray)
+                renderer.color = Color.white;
+            else
+                renderer.color = Color.gray;
+
+            yield return new WaitForSeconds(blinkInterval);
+            elapsed += blinkInterval;
+        }
+
+        
         invincible = false;
-        renderer.color = Color.pink;
+        renderer.color = Color.white;
+        invincibilityCoroutine = null;
     }
 }
