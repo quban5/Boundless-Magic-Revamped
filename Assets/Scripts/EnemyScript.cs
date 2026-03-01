@@ -18,6 +18,11 @@ public class EnemyScript : MonoBehaviour
             GameManager.Instance.EnemyKilled();
             Destroy(gameObject);
         }
+        float playerXPos = GameManager.Instance.GetPlayer().transform.position.x;
+        if (playerXPos-5>transform.position.x)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void GetHit()

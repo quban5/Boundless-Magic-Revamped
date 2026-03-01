@@ -29,6 +29,7 @@ public class PlayerScript : MonoBehaviour
         layerPosition = layerPositions.Middle;
         rb = GetComponent<Rigidbody2D>();
         GameManager.invincibilityEvent += StartInvincibility;
+        GameManager.Instance.SetPlayer(gameObject);
     }
 
     void Update()

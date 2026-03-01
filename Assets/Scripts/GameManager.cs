@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [Header("Objects")]
     [SerializeField] private GameObject ground;
     [SerializeField] private GameObject camera;
+    [SerializeField] private GameObject player;
 
     [Header("Spawning")]
     [SerializeField] private float spawnInterval;
@@ -79,7 +80,7 @@ public class GameManager : MonoBehaviour
         {
             float spawnPosY = spawnObstacleYOffset[spawnLayerPos];
             Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
-            Instantiate(obstaclePrefab, spawnPos, transform.rotation); 
+            Instantiate(obstaclePrefab, spawnPos, transform.rotation);
         }
 
         StartCoroutine(SpawnTimer());
@@ -100,5 +101,14 @@ public class GameManager : MonoBehaviour
     public float GetScore()
     {
         return score;
+    }
+
+    public void SetPlayer(GameObject player)
+    {
+        this.player = player;
+    }
+    public GameObject GetPlayer()
+    {
+        return player;
     }
 }
