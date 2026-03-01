@@ -1,69 +1,108 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
     //Components
     private Rigidbody2D rb;
+    [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float horizontalSpeed;
-    [SerializeField] private float jumpForce;
-    private bool isGrounded;
+    [SerializeField] private float verticalSpeed;
     [SerializeField] private float speedIncrease;
+    [SerializeField] private float[] layerPositionValues;
+    [SerializeField] private bool dead;
+    [SerializeField] private bool invincible;
+    [SerializeField] private float invincibilityDuration;
+
+    private enum layerPositions
+    {
+        Top = 0,
+        Middle = 1,
+        Bottom = 2
+    }
+
+    private layerPositions layerPosition;
 
     void Start()
     {
+        layerPosition = layerPositions.Middle;
         rb = GetComponent<Rigidbody2D>();
+        GameManager.invincibilityEvent += StartInvincibility;
     }
 
     void Update()
     {
-        Movement();
-        Shooting();
-
-        horizontalSpeed += Time.deltaTime * speedIncrease;
+        if (!dead)
+        {
+            Movement();
+            Shooting();
+            horizontalSpeed += Time.deltaTime * speedIncrease;
+        }
     }
 
     private void Movement()
     {
         //Move right
         rb.linearVelocity = new Vector2(horizontalSpeed, rb.linearVelocity.y);
-        //Jump
-        if (PlayerInputManager.Instance.JumpPressed && isGrounded)
+        //Move up
+        if (PlayerInputManager.Instance.upClicked)
         {
-            rb.AddForceY(jumpForce, ForceMode2D.Impulse);
-            isGrounded = false;
+            if ((int)layerPosition > 0)
+            {
+                layerPosition -= 1;
+            }
         }
+        //Move down
+        if (PlayerInputManager.Instance.downClicked)
+        {
+            if ((int)layerPosition < 2)
+            {
+                layerPosition += 1;
+            }
+        }
+        //Align to layer position
+        Vector3 currentPos = transform.position;
+        float targetYPos = layerPositionValues[(int)layerPosition];
+        Debug.Log(targetYPos);
+        float lerpedYPos = Mathf.Lerp(currentPos.y, targetYPos, verticalSpeed * Time.deltaTime);
+        transform.position = new Vector3(currentPos.x, lerpedYPos);
     }
 
     private void Shooting()
     {
         if (PlayerInputManager.Instance.ShootClicked)
         {
-            if (GameManager.Instance.GetAmmo() > 0)
+            GameObject newBullet = Instantiate(projectilePrefab, transform.position, transform.rotation);
+            ProjectileScript projectileScript = newBullet.GetComponent<ProjectileScript>();
+            projectileScript.addSpeed(horizontalSpeed);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Enemy"))
+        {
+            if (!invincible)
             {
-                GameManager.Instance.AddAmmo(-1);
-                Instantiate(projectilePrefab, transform.position, transform.rotation);
+                horizontalSpeed = 0;
+                rb.linearVelocity = new Vector2(0, 0);
+                dead = true;
             }
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void StartInvincibility()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
-        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Enemy"))
-        {
-            horizontalSpeed = 0;
-        }
+        invincible = true;
+        renderer.color = Color.brown;
+        StartCoroutine(InvincibilityTimer());
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    IEnumerator InvincibilityTimer()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-        }
+        yield return new WaitForSeconds(invincibilityDuration);
+        invincible = false;
+        renderer.color = Color.pink;
     }
 }

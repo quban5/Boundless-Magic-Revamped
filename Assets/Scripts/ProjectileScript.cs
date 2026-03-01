@@ -35,4 +35,9 @@ public class ProjectileScript : MonoBehaviour
         yield return new WaitForSeconds(lifetime);
         Destroy(gameObject);
     }
+
+    public void addSpeed(float speed)
+    {
+        this.speed += speed;
+    }
 }

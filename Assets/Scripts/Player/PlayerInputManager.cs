@@ -7,8 +7,8 @@ public class PlayerInputManager : MonoBehaviour
 
     private PlayerInputActions actions;
 
-    public bool JumpPressed => actions.Player.Jump.IsPressed();
-    public bool ShootClicked => actions.Player.Attack.WasPressedThisFrame();
+    //public bool JumpPressed => actions.Player.Jump.IsPressed();
+    public bool ShootClicked => actions.Player.Jump.WasPressedThisFrame();
     public bool restartClicked => actions.Player.Next.WasPressedThisFrame();
     public bool magicClicked => actions.Player.Magic.WasPressedThisFrame();
     public bool downClicked => actions.Player.Move.ReadValue<Vector2>().y < 0 && actions.Player.Move.WasPressedThisFrame();

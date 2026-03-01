@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public static event Action magicToggleEvent;
+    public static event Action invincibilityEvent;
 
     private void Awake()
     {
@@ -29,16 +29,16 @@ public class GameManager : MonoBehaviour
 
     [Header("Spawning")]
     [SerializeField] private float spawnInterval;
+    [SerializeField] private float spawnIntervalIncrease;
+    [SerializeField] private float minSpawnInterval;
     [SerializeField] private float spawnXOffset;
-    [SerializeField] private float spawnObstacleYOffset;
-    [SerializeField] private float spawnEnemyYOffset;
+    [SerializeField] private float[] spawnObstacleYOffset;
+    [SerializeField] private float[] spawnEnemyYOffset;
 
     [Header("Other")]
     [SerializeField] private float score;
-
-    [Header("Magic")]
-    [SerializeField] private bool magicActivated;
-    [SerializeField] private int ammo;
+    [SerializeField] private int enemiesKilled;
+    [SerializeField] private int enemyBonusCount;
 
     void Start()
     {
@@ -53,21 +53,10 @@ public class GameManager : MonoBehaviour
             string currentScene = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentScene);
         }
-
-        //Toggle the magic
-        if (PlayerInputManager.Instance.magicClicked)
+        //Decread spawn interval
+        if (spawnInterval > minSpawnInterval)
         {
-            magicActivated = !magicActivated;
-            magicToggleEvent?.Invoke();
-
-            if (magicActivated)
-            {
-                Time.timeScale = 0;
-            }
-            else
-            {
-                Time.timeScale = 1;
-            }
+            spawnInterval -= spawnIntervalIncrease * Time.deltaTime;
         }
     }
 
@@ -76,18 +65,19 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(spawnInterval);
 
         int randomVal = UnityEngine.Random.Range(0, 2);
+        int spawnLayerPos = UnityEngine.Random.Range(0, 3);
 
         float spawnPosX = camera.transform.position.x + spawnXOffset;
 
         if (randomVal == 0)
         {
-            float spawnPosY = ground.transform.position.y + spawnObstacleYOffset;
+            float spawnPosY = spawnObstacleYOffset[spawnLayerPos];
             Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
             Instantiate(obstaclePrefab, spawnPos, transform.rotation);
         }
         else
         {
-            float spawnPosY = ground.transform.position.y + spawnEnemyYOffset;
+            float spawnPosY = spawnEnemyYOffset[spawnLayerPos];
             Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
             Instantiate(enemyPrefab, spawnPos, transform.rotation);
         }
@@ -95,28 +85,20 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SpawnTimer());
     }
 
-    public void AddScore(float score)
+    public void EnemyKilled()
     {
-        this.score += score;
+        score += 10;
+        enemiesKilled++;
+
+        if (enemiesKilled >= enemyBonusCount)
+        {
+            invincibilityEvent?.Invoke();
+            enemiesKilled = 0;
+        }
     }
 
     public float GetScore()
     {
         return score;
-    }
-
-    public bool GetMagicActivated()
-    {
-        return magicActivated;
-    }
-
-    public int GetAmmo()
-    {
-        return ammo;
-    }
-
-    public void AddAmmo(int ammo)
-    {
-        this.ammo += ammo;
     }
 }
