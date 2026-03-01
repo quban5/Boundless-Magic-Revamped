@@ -71,15 +71,15 @@ public class GameManager : MonoBehaviour
 
         if (randomVal == 0)
         {
-            float spawnPosY = spawnObstacleYOffset[spawnLayerPos];
-            Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
-            Instantiate(obstaclePrefab, spawnPos, transform.rotation);
-        }
-        else
-        {
             float spawnPosY = spawnEnemyYOffset[spawnLayerPos];
             Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
             Instantiate(enemyPrefab, spawnPos, transform.rotation);
+        }
+        else
+        {
+            float spawnPosY = spawnObstacleYOffset[spawnLayerPos];
+            Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
+            Instantiate(obstaclePrefab, spawnPos, transform.rotation); 
         }
 
         StartCoroutine(SpawnTimer());
