@@ -89,6 +89,12 @@ public class PlayerScript : MonoBehaviour
                 horizontalSpeed = 0;
                 rb.linearVelocity = new Vector2(0, 0);
                 dead = true;
+            } else
+            {
+                invincible = false;
+                renderer.color = Color.white;
+                StopCoroutine(invincibilityCoroutine);
+                invincibilityCoroutine = null;
             }
         }
     }
