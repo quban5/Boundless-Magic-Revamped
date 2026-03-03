@@ -18,15 +18,18 @@ public class PlayerScript : MonoBehaviour
     private enum layerPositions
     {
         Top = 0,
-        Middle = 1,
-        Bottom = 2
+        UpMiddle = 1,
+        DownMiddle = 2,
+        Bottom = 3,
+        OutOfBoundsBottom = 4,
+        OutOfBoundsTop = 5
     }
 
     private layerPositions layerPosition;
 
     void Start()
     {
-        layerPosition = layerPositions.Middle;
+        layerPosition = layerPositions.UpMiddle;
         rb = GetComponent<Rigidbody2D>();
         GameManager.invincibilityEvent += StartInvincibility;
         GameManager.Instance.SetPlayer(gameObject);
@@ -52,22 +55,45 @@ public class PlayerScript : MonoBehaviour
             if ((int)layerPosition > 0)
             {
                 layerPosition -= 1;
+            } else
+            {
+                layerPosition = layerPositions.OutOfBoundsTop;
             }
         }
         //Move down
         if (PlayerInputManager.Instance.downClicked)
         {
-            if ((int)layerPosition < 2)
+            if ((int)layerPosition < 3)
             {
                 layerPosition += 1;
+            } else
+            {
+                layerPosition = layerPositions.OutOfBoundsBottom;
             }
         }
         //Align to layer position
         Vector3 currentPos = transform.position;
         float targetYPos = layerPositionValues[(int)layerPosition];
-        Debug.Log(targetYPos);
         float lerpedYPos = Mathf.Lerp(currentPos.y, targetYPos, verticalSpeed * Time.deltaTime);
         transform.position = new Vector3(currentPos.x, lerpedYPos);
+
+        if (layerPosition == layerPositions.OutOfBoundsBottom)
+        {
+            if (currentPos.y-0.1f < layerPositionValues[(int)layerPositions.OutOfBoundsBottom])
+            {
+                layerPosition = layerPositions.Top;
+                transform.position = new Vector3(currentPos.x,layerPositionValues[(int)layerPositions.OutOfBoundsTop]);
+            }
+        }
+
+        if (layerPosition == layerPositions.OutOfBoundsTop)
+        {
+            if (currentPos.y + 0.1f > layerPositionValues[(int)layerPositions.OutOfBoundsTop])
+            {
+                layerPosition = layerPositions.Bottom;
+                transform.position = new Vector3(currentPos.x, layerPositionValues[(int)layerPositions.OutOfBoundsBottom]);
+            }
+        }
     }
 
     private void Shooting()
