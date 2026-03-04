@@ -79,7 +79,7 @@ public class PlayerScript : MonoBehaviour
 
         if (layerPosition == layerPositions.OutOfBoundsBottom)
         {
-            if (currentPos.y-0.1f < layerPositionValues[(int)layerPositions.OutOfBoundsBottom])
+            if (currentPos.y-0.5f < layerPositionValues[(int)layerPositions.OutOfBoundsBottom])
             {
                 layerPosition = layerPositions.Top;
                 transform.position = new Vector3(currentPos.x,layerPositionValues[(int)layerPositions.OutOfBoundsTop]);
@@ -88,7 +88,7 @@ public class PlayerScript : MonoBehaviour
 
         if (layerPosition == layerPositions.OutOfBoundsTop)
         {
-            if (currentPos.y + 0.1f > layerPositionValues[(int)layerPositions.OutOfBoundsTop])
+            if (currentPos.y + 0.5f > layerPositionValues[(int)layerPositions.OutOfBoundsTop])
             {
                 layerPosition = layerPositions.Bottom;
                 transform.position = new Vector3(currentPos.x, layerPositionValues[(int)layerPositions.OutOfBoundsBottom]);
