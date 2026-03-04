@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +9,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public static event Action invincibilityEvent;
+
+    private List<GameObject> enemyList;
+    private List<GameObject> obstacleList;
 
     private void Awake()
     {
@@ -39,7 +44,8 @@ public class GameManager : MonoBehaviour
     [Header("Other")]
     [SerializeField] private float score;
     [SerializeField] private int enemiesKilled;
-    [SerializeField] private int enemyBonusCount;
+    [SerializeField] private int enemyComboCount;
+    [SerializeField] private EnemyScript.EnemyTypes enemyComboType;
 
     void Start()
     {
@@ -74,27 +80,68 @@ public class GameManager : MonoBehaviour
         {
             float spawnPosY = spawnEnemyYOffset[spawnLayerPos];
             Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
-            Instantiate(enemyPrefab, spawnPos, transform.rotation);
+            GameObject newEnemy = Instantiate(enemyPrefab, spawnPos, transform.rotation);
+            enemyList.Add(newEnemy);
+
+            int enemyTypeVal = UnityEngine.Random.Range(0, 2);
+            EnemyScript enemyScript = newEnemy.GetComponent<EnemyScript>();
+            if (enemyTypeVal == 0)
+            {
+                enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Red);
+            } else if (enemyTypeVal == 1)
+            {
+                enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Yellow);
+            }
         }
         else
         {
             float spawnPosY = spawnObstacleYOffset[spawnLayerPos];
             Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
-            Instantiate(obstaclePrefab, spawnPos, transform.rotation);
+            GameObject newObstacle = Instantiate(obstaclePrefab, spawnPos, transform.rotation);
+            obstacleList.Add(newObstacle);
         }
 
         StartCoroutine(SpawnTimer());
     }
 
-    public void EnemyKilled()
+    public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
     {
         score += 10;
+
+        if (enemyComboType != enemyType)
+        {
+            enemiesKilled = 0;
+        }
+
+        enemyComboType = enemyType;
+
         enemiesKilled++;
 
-        if (enemiesKilled >= enemyBonusCount)
+        if (enemiesKilled >= enemyComboCount)
         {
-            invincibilityEvent?.Invoke();
+            if (enemyComboType == EnemyScript.EnemyTypes.Red)
+            {
+                invincibilityEvent?.Invoke();
+            }
+            else if (enemyComboType == EnemyScript.EnemyTypes.Yellow)
+            {
+                DestroyEverything();
+            }
             enemiesKilled = 0;
+        }
+    }
+
+    private void DestroyEverything()
+    {
+        foreach (GameObject enemy in enemyList)
+        {
+            Destroy(enemy);
+            enemyList.Remove(enemy);
+        }
+        foreach (GameObject obstacle in obstacleList)
+        {
+            Destroy(obstacle);
+            obstacleList.Remove(obstacle);
         }
     }
 
