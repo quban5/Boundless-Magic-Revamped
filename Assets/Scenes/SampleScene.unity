@@ -742,6 +742,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6136153301491102279, guid: 83071db6fd98e6547820ba98dcbb0eab, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 2.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6136153301491102279, guid: 83071db6fd98e6547820ba98dcbb0eab, type: 3}
       propertyPath: EmissionModule.m_BurstCount
       value: 1
       objectReference: {fileID: 0}
@@ -759,7 +763,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6136153301491102279, guid: 83071db6fd98e6547820ba98dcbb0eab, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6136153301491102279, guid: 83071db6fd98e6547820ba98dcbb0eab, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
@@ -787,7 +791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6136153301491102279, guid: 83071db6fd98e6547820ba98dcbb0eab, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6136153301491102279, guid: 83071db6fd98e6547820ba98dcbb0eab, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.minScalar
