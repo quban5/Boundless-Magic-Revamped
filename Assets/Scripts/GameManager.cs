@@ -8,12 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    //Singleton pattern to ensure only one instance of GameManager exists
     public static GameManager Instance { get; private set; }
-    public static event Action invincibilityEvent;
-
-    private List<GameObject> enemyList = new List<GameObject>();
-    private List<GameObject> obstacleList = new List<GameObject>();
-    [SerializeField] private ChunkObject[] chunkList;
 
     private void Awake()
     {
@@ -26,30 +22,50 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    //Event for when the player gets invincibility from killing enough red enemies
+    public static event Action invincibilityEvent;
+
     [Header("Prefabs")]
-    [SerializeField] private GameObject obstaclePrefab;
+    [Tooltip("The prefab for wall spawning")]
+    [SerializeField] private GameObject wallPrefab;
+    [Tooltip("The prefab for enemy spawning")]
     [SerializeField] private GameObject enemyPrefab;
 
     [Header("Objects")]
+    [Tooltip("Object holding the sprites of all floors")]
     [SerializeField] private GameObject ground;
-    [SerializeField] private GameObject camera;
+    [Tooltip("The player object")]
     [SerializeField] private GameObject player;
 
     [Header("Spawning")]
-    [SerializeField] private float spawnInterval;
-    [SerializeField] private float spawnIntervalIncrease;
-    [SerializeField] private float minSpawnInterval;
-    [SerializeField] private float spawnXOffset;
-    [SerializeField] private float[] spawnObstacleYOffset;
-    [SerializeField] private float[] spawnEnemyYOffset;
-    [SerializeField] private float playerDistance;
-    [SerializeField] private float playerLastPositionX;
+    [Tooltip("The length of each chunk for level generation")]
+    [SerializeField] private float chunkLength;
+    [Tooltip("Y positions for spawning walls on different floors")]
+    [SerializeField] private float[] spawnWallYOffsets;
+    [Tooltip("Y positions for spawning enemies on different floors")]
+    [SerializeField] private float[] spawnEnemyYOffsets;
+    [Tooltip("The distance that the player has crossed into the current chunk")]
+    [SerializeField] private float playerChunkDistance;
+    [Tooltip("The position from which the player has entered the current chunk")]
+    [SerializeField] private float playerLastChunkPosition;
+    [Tooltip("List of chunks that can be used for level generation")]
+    [SerializeField] private ChunkObject[] chunkList;
+    [Tooltip("List of enemies that are currently in the scene")]
+    private List<GameObject> enemyList = new List<GameObject>();
+    [Tooltip("List of obstacles that are currently in the scene")]
+    private List<GameObject> obstacleList = new List<GameObject>();
 
     [Header("Other")]
+    [Tooltip("The player's current score")]
     [SerializeField] private float score;
-    [SerializeField] private int enemiesKilled;
-    [SerializeField] private int enemyComboCount;
-    [SerializeField] private EnemyScript.EnemyTypes enemyComboType;
+    [Tooltip("The number of enemies the player has killed in a row")]
+    [SerializeField] private int currentComboNumber;
+    [Tooltip("Number of enemies the player needs to kill in a row to get a bonus")]
+    [SerializeField] private int comboLimit;
+    [Tooltip("The type of the current combo enemy")]
+    [SerializeField] private EnemyScript.EnemyTypes comboEnemyType;
+
+    //Enum for the different types of obstacles that can be spawned in the game
     public enum ObstacleTypes
     {
         None,
@@ -60,60 +76,60 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        playerLastPositionX = player.transform.position.x;
+        //Initial chunk spawning
+        playerLastChunkPosition = player.transform.position.x;
     }
 
     void Update()
     {
-        //Restart game
+        //Restarting the game when the restart button is clicked
         if (PlayerInputManager.Instance.restartClicked)
         {
             string currentScene = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentScene);
         }
-        //Decread spawn interval
-        if (spawnInterval > minSpawnInterval)
-        {
-            spawnInterval -= spawnIntervalIncrease * Time.deltaTime;
-        }
-
-        if (player.transform.position.x - playerLastPositionX >= 20)
+        //Spawning new chunks when the player has crossed a certain distance into the current chunk
+        if (player.transform.position.x - playerLastChunkPosition >= 20)
         {
             SpawnChunk();
-            playerLastPositionX = player.transform.position.x;
+            playerLastChunkPosition = player.transform.position.x;
         }
     }
 
     private void SpawnChunk()
     {
-        int chunkAmmount = chunkList.Length;
-        int chunkNumber = UnityEngine.Random.Range(0, chunkAmmount - 1);
+        //Randomly selecting a chunk from the list of chunks to spawn
+        int chunkAmount = chunkList.Length;
+        int chunkNumber = UnityEngine.Random.Range(0, chunkAmount - 1);
         ChunkObject loadedChunk = chunkList[chunkNumber];
 
-        float floorLength = 10f;
-
+        //Creating a list of the floor layouts for easier iteration when spawning obstacles
         List<ObstacleTypes[]> floorLayouts = new List<ObstacleTypes[]>();
         floorLayouts.Add(loadedChunk.topFloorLayout);
         floorLayouts.Add(loadedChunk.midTopFloorLayout);
         floorLayouts.Add(loadedChunk.midBottomFloorLayout);
         floorLayouts.Add(loadedChunk.bottomFloorLayout);
 
-        float spawnOffset = player.transform.position.x + floorLength;
+        //Calculating the spawn position for the new chunk and the distance between each obstacle to be spawned
+        float spawnOffset = player.transform.position.x + chunkLength;
         int floorSpaces = loadedChunk.topFloorLayout.Length - 1;
-        float spawnDistance = floorLength / floorSpaces / 2;
+        float spawnDistance = chunkLength / floorSpaces / 2;
 
+        //Iterating through the floor layouts and spawning the appropriate obstacles based on the layout
         int i = 0;
         foreach (ObstacleTypes[] layout in floorLayouts)
         {
             foreach (ObstacleTypes type in layout)
             {
+                //Spawning a wall if the type specified in the layout is a wall
                 if (type == ObstacleTypes.Wall)
                 {
-                    Instantiate(obstaclePrefab, new Vector3(spawnOffset, spawnObstacleYOffset[i], 0), Quaternion.Euler(0, 0, 0));
+                    Instantiate(wallPrefab, new Vector3(spawnOffset, spawnWallYOffsets[i], 0), Quaternion.Euler(0, 0, 0));
                 }
+                //Spawning an enemy if the type specified in the layout is a red or yellow enemy and setting the appropriate type for the enemy script
                 if (type == ObstacleTypes.RedEnemy || type == ObstacleTypes.YellowEnemy)
                 {
-                    GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(spawnOffset, spawnEnemyYOffset[i], 0), Quaternion.Euler(0, 0, 0));
+                    GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(spawnOffset, spawnEnemyYOffsets[i], 0), Quaternion.Euler(0, 0, 0));
                     EnemyScript enemyScript = newEnemy.GetComponent<EnemyScript>();
 
                     if (type == ObstacleTypes.RedEnemy)
@@ -125,39 +141,44 @@ public class GameManager : MonoBehaviour
                         enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Yellow);
                     }
                 }
+                //Increasing the spawn offset for the next obstacle to be spawned
                 spawnOffset += spawnDistance;
             }
             i++;
         }
     }
 
+    //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
     {
         score += 10;
 
-        if (enemyComboType != enemyType)
+        //Resetting the combo count if the type of enemy killed is different from the type of enemy in the current combo
+        if (comboEnemyType != enemyType)
         {
-            enemiesKilled = 0;
+            currentComboNumber = 0;
         }
 
-        enemyComboType = enemyType;
+        comboEnemyType = enemyType;
 
-        enemiesKilled++;
+        currentComboNumber++;
 
-        if (enemiesKilled >= enemyComboCount)
+        //Checking if the player has reached the combo limit and giving the appropriate bonus based on the type of enemy in the combo
+        if (currentComboNumber >= comboLimit)
         {
-            if (enemyComboType == EnemyScript.EnemyTypes.Red)
+            if (comboEnemyType == EnemyScript.EnemyTypes.Red)
             {
                 invincibilityEvent?.Invoke();
             }
-            else if (enemyComboType == EnemyScript.EnemyTypes.Yellow)
+            else if (comboEnemyType == EnemyScript.EnemyTypes.Yellow)
             {
                 DestroyEverything();
             }
-            enemiesKilled = 0;
+            currentComboNumber = 0;
         }
     }
 
+    //Method for destroying all enemies and obstacles in the scene, used for the yellow enemy combo bonus
     private void DestroyEverything()
     {
         foreach (GameObject enemy in enemyList)

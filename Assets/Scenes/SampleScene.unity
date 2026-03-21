@@ -1478,27 +1478,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739cc154a8e643e4bab8b6596473c38f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  chunkList:
-  - {fileID: 11400000, guid: b23fcc9963503b74f95c00dd8634bc02, type: 2}
-  obstaclePrefab: {fileID: 3160238056980961449, guid: d9a3ab43ee95cd244a82a78439b8afe5, type: 3}
+  wallPrefab: {fileID: 3160238056980961449, guid: d9a3ab43ee95cd244a82a78439b8afe5, type: 3}
   enemyPrefab: {fileID: 7824423365399401821, guid: 7eea833bc1c45fd40bed65893edc087e, type: 3}
   ground: {fileID: 1899911384}
-  camera: {fileID: 519420028}
   player: {fileID: 0}
-  spawnInterval: 2
-  spawnIntervalIncrease: 0.02
-  minSpawnInterval: 0.25
-  spawnXOffset: 12
-  spawnObstacleYOffset:
-  - 3.6715
-  - 1.2
-  - -1.21
-  - -3.65
-  spawnEnemyYOffset:
-  - 3.14
-  - 0.76
-  - -1.71
-  - -4.15
+  chunkLength: 10
+  spawnWallYOffsets: []
+  spawnEnemyYOffsets: []
+  playerChunkDistance: 0
+  playerLastChunkPosition: 0
+  chunkList:
+  - {fileID: 11400000, guid: b23fcc9963503b74f95c00dd8634bc02, type: 2}
   score: 0
   enemiesKilled: 0
   enemyComboCount: 3
@@ -1862,7 +1852,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2831472426042962928, guid: d9a3ab43ee95cd244a82a78439b8afe5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.13
+      value: 3.68
       objectReference: {fileID: 0}
     - target: {fileID: 2831472426042962928, guid: d9a3ab43ee95cd244a82a78439b8afe5, type: 3}
       propertyPath: m_LocalPosition.z
