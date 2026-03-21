@@ -5,8 +5,9 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] int maxHealth;
     [SerializeField] private int health;
     [SerializeField] private EnemyTypes enemyType;
-    private SpriteRenderer spriteRenderer;
-
+    [SerializeField] Sprite yellowSprite;
+    [SerializeField] Sprite redSprite;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     public enum EnemyTypes
     {
         Red,
@@ -18,14 +19,6 @@ public class EnemyScript : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         health = maxHealth;
-
-        if (enemyType == EnemyTypes.Red)
-        {
-            spriteRenderer.color = Color.red;
-        } else if (enemyType == EnemyTypes.Yellow)
-        {
-            spriteRenderer.color = Color.black;
-        }
     }
 
     // Update is called once per frame
@@ -51,5 +44,14 @@ public class EnemyScript : MonoBehaviour
     public void SetEnemyType(EnemyTypes enemyType)
     {
         this.enemyType = enemyType;
+
+        if (enemyType == EnemyTypes.Red)
+        {
+            spriteRenderer.sprite = redSprite;
+        }
+        else if (enemyType == EnemyTypes.Yellow)
+        {
+            spriteRenderer.sprite = yellowSprite;
+        }
     }
 }

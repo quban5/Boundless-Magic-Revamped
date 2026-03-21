@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,8 +11,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public static event Action invincibilityEvent;
 
-    private List<GameObject> enemyList;
-    private List<GameObject> obstacleList;
+    private List<GameObject> enemyList = new List<GameObject>();
+    private List<GameObject> obstacleList = new List<GameObject>();
+    [SerializeField] private ChunkObject[] chunkList;
 
     private void Awake()
     {
@@ -40,16 +42,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float spawnXOffset;
     [SerializeField] private float[] spawnObstacleYOffset;
     [SerializeField] private float[] spawnEnemyYOffset;
+    [SerializeField] private float playerDistance;
+    [SerializeField] private float playerLastPositionX;
 
     [Header("Other")]
     [SerializeField] private float score;
     [SerializeField] private int enemiesKilled;
     [SerializeField] private int enemyComboCount;
     [SerializeField] private EnemyScript.EnemyTypes enemyComboType;
-
-    void Start()
+    public enum ObstacleTypes
     {
-        StartCoroutine(SpawnTimer());
+        None,
+        RedEnemy,
+        YellowEnemy,
+        Wall
+    }
+
+    private void Start()
+    {
+        playerLastPositionX = player.transform.position.x;
     }
 
     void Update()
@@ -65,43 +76,59 @@ public class GameManager : MonoBehaviour
         {
             spawnInterval -= spawnIntervalIncrease * Time.deltaTime;
         }
+
+        if (player.transform.position.x - playerLastPositionX >= 20)
+        {
+            SpawnChunk();
+            playerLastPositionX = player.transform.position.x;
+        }
     }
 
-    IEnumerator SpawnTimer()
+    private void SpawnChunk()
     {
-        yield return new WaitForSeconds(spawnInterval);
+        int chunkAmmount = chunkList.Length;
+        int chunkNumber = UnityEngine.Random.Range(0, chunkAmmount - 1);
+        ChunkObject loadedChunk = chunkList[chunkNumber];
 
-        int randomVal = UnityEngine.Random.Range(0, 2);
-        int spawnLayerPos = UnityEngine.Random.Range(0, 3);
+        float floorLength = 10f;
 
-        float spawnPosX = camera.transform.position.x + spawnXOffset;
+        List<ObstacleTypes[]> floorLayouts = new List<ObstacleTypes[]>();
+        floorLayouts.Add(loadedChunk.topFloorLayout);
+        floorLayouts.Add(loadedChunk.midTopFloorLayout);
+        floorLayouts.Add(loadedChunk.midBottomFloorLayout);
+        floorLayouts.Add(loadedChunk.bottomFloorLayout);
 
-        if (randomVal == 0)
+        float spawnOffset = player.transform.position.x + floorLength;
+        int floorSpaces = loadedChunk.topFloorLayout.Length - 1;
+        float spawnDistance = floorLength / floorSpaces / 2;
+
+        int i = 0;
+        foreach (ObstacleTypes[] layout in floorLayouts)
         {
-            float spawnPosY = spawnEnemyYOffset[spawnLayerPos];
-            Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
-            GameObject newEnemy = Instantiate(enemyPrefab, spawnPos, transform.rotation);
-            enemyList.Add(newEnemy);
+            foreach (ObstacleTypes type in layout)
+            {
+                if (type == ObstacleTypes.Wall)
+                {
+                    Instantiate(obstaclePrefab, new Vector3(spawnOffset, spawnObstacleYOffset[i], 0), Quaternion.Euler(0, 0, 0));
+                }
+                if (type == ObstacleTypes.RedEnemy || type == ObstacleTypes.YellowEnemy)
+                {
+                    GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(spawnOffset, spawnEnemyYOffset[i], 0), Quaternion.Euler(0, 0, 0));
+                    EnemyScript enemyScript = newEnemy.GetComponent<EnemyScript>();
 
-            int enemyTypeVal = UnityEngine.Random.Range(0, 2);
-            EnemyScript enemyScript = newEnemy.GetComponent<EnemyScript>();
-            if (enemyTypeVal == 0)
-            {
-                enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Red);
-            } else if (enemyTypeVal == 1)
-            {
-                enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Yellow);
+                    if (type == ObstacleTypes.RedEnemy)
+                    {
+                        enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Red);
+                    }
+                    else if (type == ObstacleTypes.YellowEnemy)
+                    {
+                        enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Yellow);
+                    }
+                }
+                spawnOffset += spawnDistance;
             }
+            i++;
         }
-        else
-        {
-            float spawnPosY = spawnObstacleYOffset[spawnLayerPos];
-            Vector3 spawnPos = new Vector3(spawnPosX, spawnPosY);
-            GameObject newObstacle = Instantiate(obstaclePrefab, spawnPos, transform.rotation);
-            obstacleList.Add(newObstacle);
-        }
-
-        StartCoroutine(SpawnTimer());
     }
 
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
