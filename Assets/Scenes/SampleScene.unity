@@ -1483,16 +1483,24 @@ MonoBehaviour:
   ground: {fileID: 1899911384}
   player: {fileID: 0}
   chunkLength: 10
-  spawnWallYOffsets: []
-  spawnEnemyYOffsets: []
+  spawnWallYOffsets:
+  - 3.68
+  - 1.27
+  - -1.08
+  - -3.64
+  spawnEnemyYOffsets:
+  - 0
+  - 0
+  - 0
+  - 0
   playerChunkDistance: 0
   playerLastChunkPosition: 0
   chunkList:
   - {fileID: 11400000, guid: b23fcc9963503b74f95c00dd8634bc02, type: 2}
   score: 0
-  enemiesKilled: 0
-  enemyComboCount: 3
-  enemyComboType: 0
+  currentComboNumber: 0
+  comboLimit: 3
+  comboEnemyType: 0
 --- !u!4 &1195451052
 Transform:
   m_ObjectHideFlags: 0
@@ -1852,7 +1860,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2831472426042962928, guid: d9a3ab43ee95cd244a82a78439b8afe5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.68
+      value: -3.64
       objectReference: {fileID: 0}
     - target: {fileID: 2831472426042962928, guid: d9a3ab43ee95cd244a82a78439b8afe5, type: 3}
       propertyPath: m_LocalPosition.z
