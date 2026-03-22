@@ -749,7 +749,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -208, y: 46.599976}
+  m_AnchoredPosition: {x: -208, y: 46.600098}
   m_SizeDelta: {x: 374.53638, y: 93.634094}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &470993004
@@ -1486,17 +1486,17 @@ MonoBehaviour:
   spawnWallYOffsets:
   - 3.68
   - 1.27
-  - -1.08
-  - -3.64
+  - -1.26
+  - -3.76
   spawnEnemyYOffsets:
-  - 0
-  - 0
-  - 0
-  - 0
+  - 3.2
+  - 0.79
+  - -1.53
+  - -4.09
   playerChunkDistance: 0
   playerLastChunkPosition: 0
   chunkList:
-  - {fileID: 11400000, guid: b23fcc9963503b74f95c00dd8634bc02, type: 2}
+  - {fileID: 11400000, guid: fd77d3a00e9be414eaa36ffea6f81aaf, type: 2}
   score: 0
   currentComboNumber: 0
   comboLimit: 3
@@ -1555,7 +1555,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 211, y: 46.599976}
+  m_AnchoredPosition: {x: 211, y: 46.600098}
   m_SizeDelta: {x: 374.53638, y: 93.634094}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1767342422
