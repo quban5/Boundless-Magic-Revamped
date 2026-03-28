@@ -124,6 +124,10 @@ public class PlayerScript : MonoBehaviour
                 invincibilityCoroutine = null;
             }
         }
+        if (collision.gameObject.CompareTag("ChunkEntry"))
+        {
+            GameManager.Instance.SpawnChunk();
+        }
     }
 
     public void StartInvincibility()

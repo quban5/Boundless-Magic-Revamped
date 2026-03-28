@@ -204,6 +204,8 @@ MonoBehaviour:
   enemyType: 0
   yellowSprite: {fileID: 407907198125173640, guid: 91cf2014724ac0f4c8b97220f485eef9, type: 3}
   redSprite: {fileID: 297761703447499198, guid: 3542a380a38499a458ff5c6e33463532, type: 3}
+  greenSprite: {fileID: 1288079852128547595, guid: 925b5cdfff4a2474d92a4d9282415f0e, type: 3}
+  blueSprite: {fileID: 3958800376534163861, guid: 5406dae589f5d7a438c23ad35d473719, type: 3}
   spriteRenderer: {fileID: 544391589114945159}
 --- !u!50 &2264937554912360533
 Rigidbody2D:

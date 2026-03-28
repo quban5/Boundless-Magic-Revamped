@@ -25,12 +25,6 @@ public class GameManager : MonoBehaviour
     //Event for when the player gets invincibility from killing enough red enemies
     public static event Action invincibilityEvent;
 
-    [Header("Prefabs")]
-    [Tooltip("The prefab for wall spawning")]
-    [SerializeField] private GameObject wallPrefab;
-    [Tooltip("The prefab for enemy spawning")]
-    [SerializeField] private GameObject enemyPrefab;
-
     [Header("Objects")]
     [Tooltip("Object holding the sprites of all floors")]
     [SerializeField] private GameObject ground;
@@ -38,22 +32,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject player;
 
     [Header("Spawning")]
-    [Tooltip("The length of each chunk for level generation")]
+    [Tooltip("The length of each chunk, used to determine where to spawn the next chunk")]
     [SerializeField] private float chunkLength;
-    [Tooltip("Y positions for spawning walls on different floors")]
-    [SerializeField] private float[] spawnWallYOffsets;
-    [Tooltip("Y positions for spawning enemies on different floors")]
-    [SerializeField] private float[] spawnEnemyYOffsets;
-    [Tooltip("The distance that the player has crossed into the current chunk")]
-    [SerializeField] private float playerChunkDistance;
-    [Tooltip("The position from which the player has entered the current chunk")]
-    [SerializeField] private float playerLastChunkPosition;
+    [Tooltip("Distance between chunks")]
+    [SerializeField] private float distanceBetweenChunks;
     [Tooltip("List of chunks that can be used for level generation")]
-    [SerializeField] private ChunkObject[] chunkList;
+    [SerializeField] private GameObject[] chunkList;
     [Tooltip("List of enemies that are currently in the scene")]
     private List<GameObject> enemyList = new List<GameObject>();
     [Tooltip("List of obstacles that are currently in the scene")]
     private List<GameObject> obstacleList = new List<GameObject>();
+    [SerializeField] private GameObject chunkEntry;
 
     [Header("Other")]
     [Tooltip("The player's current score")]
@@ -76,8 +65,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //Initial chunk spawning
-        playerLastChunkPosition = player.transform.position.x;
+
     }
 
     void Update()
@@ -88,64 +76,18 @@ public class GameManager : MonoBehaviour
             string currentScene = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentScene);
         }
-        //Spawning new chunks when the player has crossed a certain distance into the current chunk
-        if (player.transform.position.x - playerLastChunkPosition >= 20)
-        {
-            SpawnChunk();
-            playerLastChunkPosition = player.transform.position.x;
-        }
     }
 
-    private void SpawnChunk()
+    public void SpawnChunk()
     {
-        //Randomly selecting a chunk from the list of chunks to spawn
+        //Moving the chunk entry to the position of the next chunk
+        chunkEntry.transform.position += new Vector3(chunkLength + distanceBetweenChunks, 0, 0);
+
         int chunkAmount = chunkList.Length;
         int chunkNumber = UnityEngine.Random.Range(0, chunkAmount - 1);
-        ChunkObject loadedChunk = chunkList[chunkNumber];
-
-        //Creating a list of the floor layouts for easier iteration when spawning obstacles
-        List<ObstacleTypes[]> floorLayouts = new List<ObstacleTypes[]>();
-        floorLayouts.Add(loadedChunk.topFloorLayout);
-        floorLayouts.Add(loadedChunk.midTopFloorLayout);
-        floorLayouts.Add(loadedChunk.midBottomFloorLayout);
-        floorLayouts.Add(loadedChunk.bottomFloorLayout);
-
-        //Calculating the spawn position for the new chunk and the distance between each obstacle to be spawned
-        float spawnOffset = player.transform.position.x + chunkLength;
-        int floorSpaces = loadedChunk.topFloorLayout.Length - 1;
-        float spawnDistance = chunkLength / floorSpaces / 2;
-
-        //Iterating through the floor layouts and spawning the appropriate obstacles based on the layout
-        int i = 0;
-        foreach (ObstacleTypes[] layout in floorLayouts)
-        {
-            foreach (ObstacleTypes type in layout)
-            {
-                //Spawning a wall if the type specified in the layout is a wall
-                if (type == ObstacleTypes.Wall)
-                {
-                    Instantiate(wallPrefab, new Vector3(spawnOffset, spawnWallYOffsets[i], 0), Quaternion.Euler(0, 0, 0));
-                }
-                //Spawning an enemy if the type specified in the layout is a red or yellow enemy and setting the appropriate type for the enemy script
-                if (type == ObstacleTypes.RedEnemy || type == ObstacleTypes.YellowEnemy)
-                {
-                    GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(spawnOffset, spawnEnemyYOffsets[i], 0), Quaternion.Euler(0, 0, 0));
-                    EnemyScript enemyScript = newEnemy.GetComponent<EnemyScript>();
-
-                    if (type == ObstacleTypes.RedEnemy)
-                    {
-                        enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Red);
-                    }
-                    else if (type == ObstacleTypes.YellowEnemy)
-                    {
-                        enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Yellow);
-                    }
-                }
-                //Increasing the spawn offset for the next obstacle to be spawned
-                spawnOffset += spawnDistance;
-            }
-            i++;
-        }
+        GameObject loadedChunk = chunkList[chunkNumber];
+        Vector3 spawnPos = new Vector3(chunkEntry.transform.position.x+(chunkLength/2), 0, 0);
+        Instantiate(loadedChunk, spawnPos, Quaternion.identity);
     }
 
     //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
@@ -192,12 +134,10 @@ public class GameManager : MonoBehaviour
             obstacleList.Remove(obstacle);
         }
     }
-
     public float GetScore()
     {
         return score;
     }
-
     public void SetPlayer(GameObject player)
     {
         this.player = player;
@@ -206,4 +146,5 @@ public class GameManager : MonoBehaviour
     {
         return player;
     }
+
 }

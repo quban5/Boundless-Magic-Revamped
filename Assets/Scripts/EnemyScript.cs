@@ -7,11 +7,15 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private EnemyTypes enemyType;
     [SerializeField] Sprite yellowSprite;
     [SerializeField] Sprite redSprite;
+    [SerializeField] private Sprite greenSprite;
+    [SerializeField] private Sprite blueSprite;
     [SerializeField] private SpriteRenderer spriteRenderer;
     public enum EnemyTypes
     {
         Red,
-        Yellow
+        Yellow,
+        Green,
+        Blue
     }
 
     void Start()
@@ -52,6 +56,13 @@ public class EnemyScript : MonoBehaviour
         else if (enemyType == EnemyTypes.Yellow)
         {
             spriteRenderer.sprite = yellowSprite;
+        } else if (enemyType == EnemyTypes.Green)
+        {
+            spriteRenderer.sprite = greenSprite;
+        }
+        else if (enemyType == EnemyTypes.Blue)
+        {
+            spriteRenderer.sprite = blueSprite; 
         }
     }
 }
