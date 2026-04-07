@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("The type of the current combo enemy")]
     [SerializeField] private EnemyScript.EnemyTypes comboEnemyType;
     private Dictionary<RuneTypes, float> runeChances = new Dictionary<RuneTypes, float>();
-    private enum RuneTypes
+    public enum RuneTypes
     {
         Red = 0,
         Yellow = 1,
@@ -56,9 +56,10 @@ public class GameManager : MonoBehaviour
         Blue = 3
     }
     private List<List<RuneTypes>> spellPool = new List<List<RuneTypes>>();
+    private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
     private void Start()
     {
-        GenerateSpellPool();
+        
     }
     void Update()
     {
@@ -170,10 +171,14 @@ public class GameManager : MonoBehaviour
         }
 
         int totalRuneCount = 0;
-        runeChances.Add(RuneTypes.Red, 0);
-        runeChances.Add(RuneTypes.Yellow, 0);
-        runeChances.Add(RuneTypes.Green, 0);
-        runeChances.Add(RuneTypes.Blue, 0);
+
+        if (runeChances.Count == 0)
+        {
+            runeChances.Add(RuneTypes.Red, 0);
+            runeChances.Add(RuneTypes.Yellow, 0);
+            runeChances.Add(RuneTypes.Green, 0);
+            runeChances.Add(RuneTypes.Blue, 0);
+        }
 
         foreach (List<RuneTypes> spell in spellPool)
         {
@@ -190,5 +195,24 @@ public class GameManager : MonoBehaviour
             float chance = (runeChances[runeType] / totalRuneCount);
             Debug.Log(runeType.ToString() + " Chance: " + chance.ToString("F2"));
         }
+
+        //Choose the first 3 spells in the spell pool to be the active spells at the start of the game
+        activeSpells.Clear();
+        for (int i = 0; i < 3; i++)
+        {
+            int poolIndex = UnityEngine.Random.Range(0, spellPool.Count);
+            activeSpells.Add(spellPool[poolIndex]);
+            spellPool.RemoveAt(poolIndex);
+            Debug.Log("Active Spell " + (i + 1) + ": " + string.Join(" ", activeSpells[i]));
+        }
+    }
+    public List<List<RuneTypes>> GetActiveSpells()
+    {
+        return activeSpells;
+    }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene("MainScene");
     }
 }
