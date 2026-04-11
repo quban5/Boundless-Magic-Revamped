@@ -52,8 +52,7 @@ public class GameManager : MonoBehaviour
     {
         Red = 0,
         Yellow = 1,
-        Green = 2,
-        Blue = 3
+        Blue = 2
     }
     private List<List<RuneTypes>> spellPool = new List<List<RuneTypes>>();
     private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
@@ -140,14 +139,14 @@ public class GameManager : MonoBehaviour
     }
     public void GenerateSpellPool()
     {
-        for (int i = 0; i < 11; i++)
+        for (int i = 0; i < 8; i++)
         {
             while (true)
             {
                 List<RuneTypes> generatedSpell = new List<RuneTypes>();
                 for (int j = 0; j < 3; j++)
                 {
-                    int runeNum = UnityEngine.Random.Range(0, 4);
+                    int runeNum = UnityEngine.Random.Range(0, 3);
                     generatedSpell.Add((RuneTypes)runeNum);
                 }
 
@@ -160,7 +159,7 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("Spell Pool Generated:");
-        for (int i = 0; i < 11; i++)
+        for (int i = 0; i < 8; i++)
         {
             string spellString = "";
             foreach (RuneTypes rune in spellPool[i])
@@ -176,7 +175,6 @@ public class GameManager : MonoBehaviour
         {
             runeChances.Add(RuneTypes.Red, 0);
             runeChances.Add(RuneTypes.Yellow, 0);
-            runeChances.Add(RuneTypes.Green, 0);
             runeChances.Add(RuneTypes.Blue, 0);
         }
 

@@ -12,7 +12,6 @@ public class MainMenuCanvasScript : MonoBehaviour
     [SerializeField] private Sprite redRuneSprite;
     [SerializeField] private Sprite yellowRuneSprite;
     [SerializeField] private Sprite blueRuneSprite;
-    [SerializeField] private Sprite greenRuneSprite;
     private List<List<RuneTypes>> activeSpells;
     private Dictionary<RuneTypes, Sprite> runeSprites = new Dictionary<RuneTypes, Sprite>();
     [SerializeField] private Button startButton;
@@ -28,7 +27,6 @@ public class MainMenuCanvasScript : MonoBehaviour
         // Initialize the runeSprites dictionary with the corresponding sprites for each RuneType
         runeSprites[RuneTypes.Red] = redRuneSprite;
         runeSprites[RuneTypes.Yellow] = yellowRuneSprite;
-        runeSprites[RuneTypes.Green] = greenRuneSprite;
         runeSprites[RuneTypes.Blue] = blueRuneSprite;
     }
 
