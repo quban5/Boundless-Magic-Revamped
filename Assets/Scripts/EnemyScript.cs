@@ -14,7 +14,6 @@ public class EnemyScript : MonoBehaviour
     {
         Red,
         Yellow,
-        Green,
         Blue
     }
 
@@ -56,10 +55,7 @@ public class EnemyScript : MonoBehaviour
         else if (enemyType == EnemyTypes.Yellow)
         {
             spriteRenderer.sprite = yellowSprite;
-        } else if (enemyType == EnemyTypes.Green)
-        {
-            spriteRenderer.sprite = greenSprite;
-        }
+        } 
         else if (enemyType == EnemyTypes.Blue)
         {
             spriteRenderer.sprite = blueSprite; 

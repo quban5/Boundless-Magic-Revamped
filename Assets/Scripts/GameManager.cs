@@ -48,18 +48,37 @@ public class GameManager : MonoBehaviour
     [Tooltip("The type of the current combo enemy")]
     [SerializeField] private EnemyScript.EnemyTypes comboEnemyType;
     private Dictionary<RuneTypes, float> runeChances = new Dictionary<RuneTypes, float>();
+    private Dictionary<RuneTypes, float> runeChanceThresholds = new Dictionary<RuneTypes, float>();
+    private Dictionary<SpellTypes, bool> unlockedSpells = new Dictionary<SpellTypes, bool>();
+    private List<List<RuneTypes>> spellPool = new List<List<RuneTypes>>();
+    private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
     public enum RuneTypes
     {
         Red = 0,
         Yellow = 1,
         Blue = 2
     }
-    private List<List<RuneTypes>> spellPool = new List<List<RuneTypes>>();
-    private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
+    public enum SpellTypes
+    {
+        Invulnerability = 0,
+        Fireball = 1,
+        TimeSlow = 2,
+        Shield = 3,
+        Curse = 4,
+        Sword = 5,
+        TripleTrouble = 6,
+    }
     private void Start()
     {
-        
+        unlockedSpells.Add(SpellTypes.Invulnerability, true);
+        unlockedSpells.Add(SpellTypes.Fireball, false);
+        unlockedSpells.Add(SpellTypes.TimeSlow, false);
+        unlockedSpells.Add(SpellTypes.Shield, false);
+        unlockedSpells.Add(SpellTypes.Curse, false);
+        unlockedSpells.Add(SpellTypes.Sword, false);
+        unlockedSpells.Add(SpellTypes.TripleTrouble, false);
     }
+
     void Update()
     {
         //Restarting the game when the restart button is clicked
@@ -169,16 +188,25 @@ public class GameManager : MonoBehaviour
             Debug.Log("Spell " + (i + 1) + ": " + spellString);
         }
 
-        int totalRuneCount = 0;
-
-        if (runeChances.Count == 0)
+        //Choose the first 3 spells in the spell pool to be the active spells at the start of the game
+        activeSpells.Clear();
+        for (int i = 0; i < 3; i++)
         {
-            runeChances.Add(RuneTypes.Red, 0);
-            runeChances.Add(RuneTypes.Yellow, 0);
-            runeChances.Add(RuneTypes.Blue, 0);
+            int poolIndex = UnityEngine.Random.Range(0, spellPool.Count);
+            activeSpells.Add(spellPool[poolIndex]);
+            spellPool.RemoveAt(poolIndex);
+            Debug.Log("Active Spell " + (i + 1) + ": " + string.Join(" ", activeSpells[i]));
         }
 
-        foreach (List<RuneTypes> spell in spellPool)
+        //Calculating the chances of each rune type appearing in the active spells
+        int totalRuneCount = 0;
+
+        runeChances.Clear();
+        runeChances.Add(RuneTypes.Red, 0);
+        runeChances.Add(RuneTypes.Yellow, 0);
+        runeChances.Add(RuneTypes.Blue, 0);
+
+        foreach (List<RuneTypes> spell in activeSpells)
         {
             foreach (RuneTypes rune in spell)
             {
@@ -194,16 +222,24 @@ public class GameManager : MonoBehaviour
             Debug.Log(runeType.ToString() + " Chance: " + chance.ToString("F2"));
         }
 
-        //Choose the first 3 spells in the spell pool to be the active spells at the start of the game
-        activeSpells.Clear();
-        for (int i = 0; i < 3; i++)
+        //Calculating the thresholds for each rune type based on their chances
+        runeChanceThresholds.Clear();
+        runeChanceThresholds.Add(RuneTypes.Red, runeChances[RuneTypes.Red]);
+        runeChanceThresholds.Add(RuneTypes.Yellow, runeChances[RuneTypes.Red] + runeChances[RuneTypes.Yellow]);
+        runeChanceThresholds.Add(RuneTypes.Blue, runeChances[RuneTypes.Red] + runeChances[RuneTypes.Yellow] + runeChances[RuneTypes.Blue]);
+
+        Debug.Log("Rune Chance Thresholds:");
+        foreach (KeyValuePair<RuneTypes, float> kvp in runeChanceThresholds)
         {
-            int poolIndex = UnityEngine.Random.Range(0, spellPool.Count);
-            activeSpells.Add(spellPool[poolIndex]);
-            spellPool.RemoveAt(poolIndex);
-            Debug.Log("Active Spell " + (i + 1) + ": " + string.Join(" ", activeSpells[i]));
+            Debug.Log(kvp.Key.ToString() + ": " + kvp.Value.ToString("F2"));
         }
     }
+
+    public Dictionary<RuneTypes, float> GetRuneChanceThresholds()
+    {
+        return runeChanceThresholds;
+    }
+
     public List<List<RuneTypes>> GetActiveSpells()
     {
         return activeSpells;
