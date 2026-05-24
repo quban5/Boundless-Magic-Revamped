@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
@@ -14,6 +16,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private bool dead;
     [SerializeField] private bool invincible;
     [SerializeField] private float invincibilityDuration;
+    [SerializeField] private SpriteRenderer[] runeSprites; 
 
     private enum layerPositions
     {
@@ -33,6 +36,11 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         GameManager.invincibilityEvent += StartInvincibility;
         GameManager.Instance.SetPlayer(gameObject);
+
+        foreach (SpriteRenderer rune in runeSprites)
+        {
+            rune.gameObject.SetActive(false);
+        }
     }
 
     void Update()
@@ -171,5 +179,34 @@ public class PlayerScript : MonoBehaviour
         invincible = false;
         renderer.color = Color.white;
         invincibilityCoroutine = null;
+    }
+
+    public void SetRuneSprites(List<GameManager.RuneTypes> runes)
+    {
+        int i = 0;
+        foreach (SpriteRenderer runeSprite in runeSprites)
+        {
+            if (runes.Count > i)
+            {
+                switch (runes[i])
+                {
+                    case GameManager.RuneTypes.Red:
+                        runeSprite.color = Color.red;
+                        break;
+                    case GameManager.RuneTypes.Yellow:
+                        runeSprite.color = Color.yellow;
+                        break;
+                    case GameManager.RuneTypes.Blue:
+                        runeSprite.color = Color.blue;
+                        break;
+                }
+                runeSprite.gameObject.SetActive(true);
+                i++;
+            }
+            else
+            {
+                runeSprite.gameObject.SetActive(false);
+            }
+        }
     }
 }

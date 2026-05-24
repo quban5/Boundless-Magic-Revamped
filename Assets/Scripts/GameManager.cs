@@ -42,12 +42,6 @@ public class GameManager : MonoBehaviour
     [Header("Other")]
     [Tooltip("The player's current score")]
     [SerializeField] private float score;
-    [Tooltip("The number of enemies the player has killed in a row")]
-    [SerializeField] private int currentComboNumber;
-    [Tooltip("Number of enemies the player needs to kill in a row to get a bonus")]
-    [SerializeField] private int comboLimit;
-    [Tooltip("The type of the current combo enemy")]
-    [SerializeField] private EnemyScript.EnemyTypes comboEnemyType;
     private Dictionary<RuneTypes, float> runeChances = new Dictionary<RuneTypes, float>();
     public Dictionary<RuneTypes, float> runeChanceThresholds = new Dictionary<RuneTypes, float>();
     private Dictionary<SpellTypes, bool> unlockedSpells = new Dictionary<SpellTypes, bool>();
@@ -55,6 +49,7 @@ public class GameManager : MonoBehaviour
     private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
     [SerializeField]private Vector3 chunkSpawnPos;
     private List<GameObject> spawnedChunks = new List<GameObject>();
+    private List<RuneTypes> spellCombo = new List<RuneTypes>();
     public enum RuneTypes
     {
         Red = 0,
@@ -115,30 +110,32 @@ public class GameManager : MonoBehaviour
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
     {
         score += 10;
+        
+        spellCombo.Add((RuneTypes)enemyType);
 
-        //Resetting the combo count if the type of enemy killed is different from the type of enemy in the current combo
-        if (comboEnemyType != enemyType)
+        foreach (List<RuneTypes> spell in activeSpells)
         {
-            currentComboNumber = 0;
+            int i = 0;
+            if (spell.SequenceEqual(spellCombo))
+            {
+                if (i == 0)
+                {
+                    invincibilityEvent?.Invoke();
+                }
+                else if (i == 1)
+                {
+                    DestroyEverything();
+                }
+            }
+            i++;
         }
 
-        comboEnemyType = enemyType;
-
-        currentComboNumber++;
-
-        //Checking if the player has reached the combo limit and giving the appropriate bonus based on the type of enemy in the combo
-        if (currentComboNumber >= comboLimit)
+        if (spellCombo.Count > 2)
         {
-            if (comboEnemyType == EnemyScript.EnemyTypes.Red)
-            {
-                invincibilityEvent?.Invoke();
-            }
-            else if (comboEnemyType == EnemyScript.EnemyTypes.Yellow)
-            {
-                DestroyEverything();
-            }
-            currentComboNumber = 0;
+            spellCombo.Clear();
         }
+
+        player.GetComponent<PlayerScript>().SetRuneSprites(spellCombo);
     }
     //Method for destroying all enemies and obstacles in the scene, used for the yellow enemy combo bonus
     private void DestroyEverything()
@@ -229,6 +226,7 @@ public class GameManager : MonoBehaviour
         {
             RuneTypes runeType = (RuneTypes)i;
             float chance = (runeChances[runeType] / totalRuneCount);
+            runeChances[runeType] = chance;
             Debug.Log(runeType.ToString() + " Chance: " + chance.ToString("F2"));
         }
 
@@ -236,12 +234,12 @@ public class GameManager : MonoBehaviour
         runeChanceThresholds.Clear();
         runeChanceThresholds.Add(RuneTypes.Red, runeChances[RuneTypes.Red]);
         runeChanceThresholds.Add(RuneTypes.Yellow, runeChances[RuneTypes.Red] + runeChances[RuneTypes.Yellow]);
-        runeChanceThresholds.Add(RuneTypes.Blue, runeChances[RuneTypes.Red] + runeChances[RuneTypes.Yellow] + runeChances[RuneTypes.Blue]);
+        runeChanceThresholds.Add(RuneTypes.Blue, 1f);
 
         Debug.Log("Rune Chance Thresholds:");
         foreach (KeyValuePair<RuneTypes, float> kvp in runeChanceThresholds)
         {
-            Debug.Log(kvp.Key.ToString() + ": " + kvp.Value.ToString("F2"));
+            Debug.Log(kvp.Key.ToString() + ": " + kvp.Value.ToString());
         }
     }
 
