@@ -11,8 +11,8 @@ public class EnemySpawnpointScript : MonoBehaviour
     private Dictionary<RuneTypes, float> runeChanceThresholds;
     void Start()
     {
-        player = GameManager.Instance.GetPlayer();
-        runeChanceThresholds = GameManager.Instance.GetRuneChanceThresholds();
+        player = Instance.GetPlayer();
+        runeChanceThresholds = Instance.GetRuneChanceThresholds();
     }
 
     void Update()

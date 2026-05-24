@@ -44,14 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739cc154a8e643e4bab8b6596473c38f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  ground: {fileID: 0}
   player: {fileID: 526171442341463024, guid: e4204abe967884a48ad200faa468964b, type: 3}
   chunkLength: 17
   distanceBetweenChunks: 2
   chunkList:
   - {fileID: 526171442341463024, guid: e4204abe967884a48ad200faa468964b, type: 3}
-  chunkEntry: {fileID: 0}
   score: 0
   currentComboNumber: 0
   comboLimit: 3
   comboEnemyType: 0
+  chunkSpawnPos: {x: 8.36, y: 0, z: 0}

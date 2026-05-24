@@ -1176,7 +1176,6 @@ MonoBehaviour:
   redRuneSprite: {fileID: -1524360770217983477, guid: 6cd73e34ab710d64883712a590e58603, type: 3}
   yellowRuneSprite: {fileID: 4211730607379277569, guid: 1aebddf67f127854cb2e40cc7bfe173f, type: 3}
   blueRuneSprite: {fileID: 5813759663371771853, guid: 5b5bcb3c7c3a65d40b3a63b35e1e7901, type: 3}
-  greenRuneSprite: {fileID: 3748071843501941247, guid: db614cc5787f2b34b8795052e800ad55, type: 3}
   startButton: {fileID: 1786033545}
 --- !u!1 &686975377
 GameObject:

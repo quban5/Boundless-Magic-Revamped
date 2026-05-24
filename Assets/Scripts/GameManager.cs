@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 {
     //Singleton pattern to ensure only one instance of GameManager exists
     public static GameManager Instance { get; private set; }
+
+
     private void Awake()
     {
         if (Instance != null)
@@ -18,7 +20,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
+        DontDestroyOnLoad(gameObject);
         Instance = this;
     }
     //Event for when the player gets invincibility from killing enough red enemies
@@ -37,7 +39,6 @@ public class GameManager : MonoBehaviour
     private List<GameObject> enemyList = new List<GameObject>();
     [Tooltip("List of obstacles that are currently in the scene")]
     private List<GameObject> obstacleList = new List<GameObject>();
-    [SerializeField] private GameObject chunkEntry;
     [Header("Other")]
     [Tooltip("The player's current score")]
     [SerializeField] private float score;
@@ -48,10 +49,12 @@ public class GameManager : MonoBehaviour
     [Tooltip("The type of the current combo enemy")]
     [SerializeField] private EnemyScript.EnemyTypes comboEnemyType;
     private Dictionary<RuneTypes, float> runeChances = new Dictionary<RuneTypes, float>();
-    private Dictionary<RuneTypes, float> runeChanceThresholds = new Dictionary<RuneTypes, float>();
+    public Dictionary<RuneTypes, float> runeChanceThresholds = new Dictionary<RuneTypes, float>();
     private Dictionary<SpellTypes, bool> unlockedSpells = new Dictionary<SpellTypes, bool>();
     private List<List<RuneTypes>> spellPool = new List<List<RuneTypes>>();
     private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
+    [SerializeField]private Vector3 chunkSpawnPos;
+    private List<GameObject> spawnedChunks = new List<GameObject>();
     public enum RuneTypes
     {
         Red = 0,
@@ -77,6 +80,11 @@ public class GameManager : MonoBehaviour
         unlockedSpells.Add(SpellTypes.Curse, false);
         unlockedSpells.Add(SpellTypes.Sword, false);
         unlockedSpells.Add(SpellTypes.TripleTrouble, false);
+
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainScene") && runeChanceThresholds.Count == 0)
+        {
+            GenerateSpellPool();
+        }
     }
 
     void Update()
@@ -93,13 +101,15 @@ public class GameManager : MonoBehaviour
     }
     public void SpawnChunk()
     {
-        //Moving the chunk entry to the position of the next chunk
-        chunkEntry.transform.position += new Vector3(chunkLength + distanceBetweenChunks, 0, 0);
+        chunkSpawnPos += new Vector3(chunkLength + distanceBetweenChunks, 0, 0);
         int chunkAmount = chunkList.Length;
         int chunkNumber = UnityEngine.Random.Range(0, chunkAmount);
         GameObject loadedChunk = chunkList[chunkNumber];
-        Vector3 spawnPos = new Vector3(chunkEntry.transform.position.x+(chunkLength/2), 0, 0);
-        Instantiate(loadedChunk, spawnPos, Quaternion.identity);
+        GameObject currentChunk = Instantiate(loadedChunk, chunkSpawnPos + new Vector3(chunkLength / 2, 0, 0), Quaternion.identity);
+        spawnedChunks.Add(currentChunk);
+        if (spawnedChunks.Count >= 3) {
+            Destroy(spawnedChunks[spawnedChunks.Count-3]);
+        }
     }
     //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
