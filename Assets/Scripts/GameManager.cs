@@ -101,13 +101,8 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene(currentScene);
             }
         }
-
-        if (PlayerInputManager.Instance.magicClicked)
-        {
-            CastSpell();
-        }
     }
-    private void CastSpell()
+    public void CastSpell()
     {
         switch (currentCastableSpell)
         {
@@ -134,6 +129,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
         spellCombo.Clear();
+        player.GetComponent<PlayerScript>().SetRuneSprites(spellCombo);
     }
     public void SpawnChunk()
     {

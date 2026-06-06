@@ -10,7 +10,6 @@ public class PlayerInputManager : MonoBehaviour
     //public bool JumpPressed => actions.Player.Jump.IsPressed();
     public bool ShootClicked => actions.Player.Jump.WasPressedThisFrame();
     public bool restartClicked => actions.Player.Next.WasPressedThisFrame();
-    public bool magicClicked => actions.Player.Magic.WasPressedThisFrame();
     public bool downClicked => actions.Player.Move.ReadValue<Vector2>().y < 0 && actions.Player.Move.WasPressedThisFrame();
     public bool upClicked => actions.Player.Move.ReadValue<Vector2>().y > 0 && actions.Player.Move.WasPressedThisFrame();
 
@@ -24,6 +23,14 @@ public class PlayerInputManager : MonoBehaviour
 
         Instance = this;
         actions = new PlayerInputActions();
+    }
+
+    private void Update()
+    {
+        if (actions.Player.Magic.WasPressedThisFrame())
+        {
+            GameManager.Instance.CastSpell();
+        }
     }
 
     private void OnEnable() => actions.Enable();
