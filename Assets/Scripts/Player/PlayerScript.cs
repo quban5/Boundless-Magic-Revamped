@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private bool dead;
     [SerializeField] private bool invincible;
     [SerializeField] private float invincibilityDuration;
-    [SerializeField] private SpriteRenderer[] runeSprites; 
+    [SerializeField] private SpriteRenderer[] runeSprites;
 
     private enum layerPositions
     {
@@ -121,21 +122,29 @@ public class PlayerScript : MonoBehaviour
         {
             if (!invincible)
             {
-                horizontalSpeed = 0;
-                rb.linearVelocity = new Vector2(0, 0);
-                dead = true;
-            } else
+                Die();
+            }
+            else
             {
                 invincible = false;
                 renderer.color = Color.white;
                 StopCoroutine(invincibilityCoroutine);
                 invincibilityCoroutine = null;
+                Die();
             }
         }
         if (collision.gameObject.CompareTag("ChunkEntry"))
         {
             GameManager.Instance.SpawnChunk();
         }
+    }
+
+    private void Die()
+    {
+        horizontalSpeed = 0;
+        rb.linearVelocity = new Vector2(0, 0);
+        dead = true;
+        GameManager.Instance.GameOver();
     }
 
     public void StartInvincibility()

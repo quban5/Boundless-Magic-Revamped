@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     private Dictionary<SpellTypes, bool> unlockedSpells = new Dictionary<SpellTypes, bool>();
     private List<List<RuneTypes>> spellPool = new List<List<RuneTypes>>();
     private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
-    [SerializeField]private Vector3 chunkSpawnPos;
+    [SerializeField] private Vector3 chunkSpawnPos;
     private List<GameObject> spawnedChunks = new List<GameObject>();
     private List<RuneTypes> spellCombo = new List<RuneTypes>();
     public enum RuneTypes
@@ -102,15 +102,16 @@ public class GameManager : MonoBehaviour
         GameObject loadedChunk = chunkList[chunkNumber];
         GameObject currentChunk = Instantiate(loadedChunk, chunkSpawnPos + new Vector3(chunkLength / 2, 0, 0), Quaternion.identity);
         spawnedChunks.Add(currentChunk);
-        if (spawnedChunks.Count >= 3) {
-            Destroy(spawnedChunks[spawnedChunks.Count-3]);
+        if (spawnedChunks.Count >= 3)
+        {
+            Destroy(spawnedChunks[spawnedChunks.Count - 3]);
         }
     }
     //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
     {
         score += 10;
-        
+
         spellCombo.Add((RuneTypes)enemyType);
 
         foreach (List<RuneTypes> spell in activeSpells)
@@ -256,5 +257,11 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene("MainScene");
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over! Final Score: " + score);
+        SceneManager.LoadScene("TitleScreen");
     }
 }
