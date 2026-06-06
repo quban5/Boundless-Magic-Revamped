@@ -47,9 +47,12 @@ public class GameManager : MonoBehaviour
     private Dictionary<SpellTypes, bool> unlockedSpells = new Dictionary<SpellTypes, bool>();
     private List<List<RuneTypes>> spellPool = new List<List<RuneTypes>>();
     private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
+    private List<SpellTypes> activeSpellTypes = new List<SpellTypes>();
     [SerializeField] private Vector3 chunkSpawnPos;
     private List<GameObject> spawnedChunks = new List<GameObject>();
     private List<RuneTypes> spellCombo = new List<RuneTypes>();
+    private SpellTypes currentCastableSpell;
+
     public enum RuneTypes
     {
         Red = 0,
@@ -58,13 +61,14 @@ public class GameManager : MonoBehaviour
     }
     public enum SpellTypes
     {
-        Invulnerability = 0,
-        Fireball = 1,
-        TimeSlow = 2,
-        Shield = 3,
-        Curse = 4,
-        Sword = 5,
-        TripleTrouble = 6,
+        None = 0,
+        Invulnerability = 1,
+        Fireball = 2,
+        TimeSlow = 3,
+        Shield = 4,
+        Curse = 5,
+        Sword = 6,
+        TripleTrouble = 7,
     }
     private void Start()
     {
@@ -75,6 +79,10 @@ public class GameManager : MonoBehaviour
         unlockedSpells.Add(SpellTypes.Curse, false);
         unlockedSpells.Add(SpellTypes.Sword, false);
         unlockedSpells.Add(SpellTypes.TripleTrouble, false);
+
+        activeSpellTypes.Add(SpellTypes.Invulnerability);
+        activeSpellTypes.Add(SpellTypes.Fireball);
+        activeSpellTypes.Add(SpellTypes.TimeSlow);
 
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainScene") && runeChanceThresholds.Count == 0)
         {
@@ -93,6 +101,39 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene(currentScene);
             }
         }
+
+        if (PlayerInputManager.Instance.magicClicked)
+        {
+            CastSpell();
+        }
+    }
+    private void CastSpell()
+    {
+        switch (currentCastableSpell)
+        {
+            case SpellTypes.Invulnerability:
+                invincibilityEvent?.Invoke();
+                break;
+            case SpellTypes.Fireball:
+                //Implement fireball spell
+                break;
+            case SpellTypes.TimeSlow:
+                //Implement time slow spell
+                break;
+            case SpellTypes.Shield:
+                //Implement shield spell
+                break;
+            case SpellTypes.Curse:
+                //Implement curse spell
+                break;
+            case SpellTypes.Sword:
+                //Implement sword spell
+                break;
+            case SpellTypes.TripleTrouble:
+                //Implement triple trouble spell
+                break;
+        }
+        spellCombo.Clear();
     }
     public void SpawnChunk()
     {
@@ -117,27 +158,21 @@ public class GameManager : MonoBehaviour
         foreach (List<RuneTypes> spell in activeSpells)
         {
             int i = 0;
-            if (spell.SequenceEqual(spellCombo))
+            if (spell.OrderBy(x => x).SequenceEqual(spellCombo.OrderBy(x => x)))
             {
-                if (i == 0)
-                {
-                    invincibilityEvent?.Invoke();
-                }
-                else if (i == 1)
-                {
-                    DestroyEverything();
-                }
+                currentCastableSpell = activeSpellTypes[i];
             }
             i++;
         }
 
-        if (spellCombo.Count > 2)
+        if (spellCombo.Count > 3)
         {
             spellCombo.Clear();
         }
 
         player.GetComponent<PlayerScript>().SetRuneSprites(spellCombo);
     }
+
     //Method for destroying all enemies and obstacles in the scene, used for the yellow enemy combo bonus
     private void DestroyEverything()
     {
@@ -166,27 +201,20 @@ public class GameManager : MonoBehaviour
     }
     public void GenerateSpellPool()
     {
-        for (int i = 0; i < 8; i++)
-        {
-            while (true)
-            {
-                List<RuneTypes> generatedSpell = new List<RuneTypes>();
-                for (int j = 0; j < 3; j++)
-                {
-                    int runeNum = UnityEngine.Random.Range(0, 3);
-                    generatedSpell.Add((RuneTypes)runeNum);
-                }
-
-                if (!spellPool.Any(poolSpell => poolSpell.SequenceEqual(generatedSpell)))
-                {
-                    spellPool.Add(generatedSpell);
-                    break;
-                }
-            }
-        }
+        spellPool.Clear();
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Blue, RuneTypes.Red, RuneTypes.Yellow });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Blue, RuneTypes.Blue, RuneTypes.Blue });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Blue, RuneTypes.Blue });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Red, RuneTypes.Red });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Yellow, RuneTypes.Red, RuneTypes.Yellow });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Yellow, RuneTypes.Yellow, RuneTypes.Yellow });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Yellow, RuneTypes.Blue, RuneTypes.Blue });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Red, RuneTypes.Yellow });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Red, RuneTypes.Blue });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Blue, RuneTypes.Yellow, RuneTypes.Yellow });
 
         Debug.Log("Spell Pool Generated:");
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 10; i++)
         {
             string spellString = "";
             foreach (RuneTypes rune in spellPool[i])

@@ -18,6 +18,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private bool invincible;
     [SerializeField] private float invincibilityDuration;
     [SerializeField] private SpriteRenderer[] runeSprites;
+    [SerializeField] private GameObject runeHolder;
 
     private enum layerPositions
     {
@@ -51,6 +52,7 @@ public class PlayerScript : MonoBehaviour
             Movement();
             Shooting();
             horizontalSpeed += Time.deltaTime * speedIncrease;
+            runeHolder.transform.RotateAround(runeHolder.transform.position, Vector3.forward, 360 * Time.deltaTime);
         }
     }
 
