@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public static event Action timeslowEvent;
     public static event Action shieldEvent;
     public static event Action swordEvent;
+    public static event Action<int,string> setActiveSpellTextEvent;
 
     [Header("Player")]
     [SerializeField] private GameObject player;
@@ -89,14 +90,49 @@ public class GameManager : MonoBehaviour
         unlockedSpells.Add(SpellTypes.Sword, false);
         unlockedSpells.Add(SpellTypes.TripleTrouble, false);
 
-        activeSpellTypes.Add(SpellTypes.Sword);
-        activeSpellTypes.Add(SpellTypes.Curse);
-        activeSpellTypes.Add(SpellTypes.TimeSlow);
+        activeSpellTypes.Add(SpellTypes.None);
+        activeSpellTypes.Add(SpellTypes.None);
+        activeSpellTypes.Add(SpellTypes.None);
 
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainScene") && runeChanceThresholds.Count == 0)
         {
             GenerateSpellPool();
         }
+    }
+
+    public void ChangeActiveSpell(int spell)
+    {
+        SpellTypes tempActiveSpellType = activeSpellTypes[spell];
+
+        tempActiveSpellType++;
+
+        if (tempActiveSpellType > SpellTypes.TripleTrouble)
+        {
+            tempActiveSpellType = SpellTypes.None;
+        }
+
+        int i = 0;
+
+        foreach (SpellTypes spellType in activeSpellTypes)
+        {
+            if (i != spell)
+            {
+                if (tempActiveSpellType == spellType && tempActiveSpellType != SpellTypes.None)
+                {
+                    tempActiveSpellType++;
+
+                    if (tempActiveSpellType > SpellTypes.TripleTrouble)
+                    {
+                        tempActiveSpellType = SpellTypes.None;
+                    }
+                }
+            }
+            i++;
+        }
+
+        activeSpellTypes[spell] = tempActiveSpellType;
+
+        setActiveSpellTextEvent?.Invoke(spell, activeSpellTypes[spell].ToString());
     }
 
     void Update()

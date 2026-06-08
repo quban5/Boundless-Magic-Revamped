@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameManager;
+using TMPro;
+using System;
 
 public class MainMenuCanvasScript : MonoBehaviour
 {
     [SerializeField] private GameObject[] spell1Info;
     [SerializeField] private GameObject[] spell2Info;
     [SerializeField] private GameObject[] spell3Info;
+    [SerializeField] private TextMeshProUGUI[] spellNames;
     private GameObject[][] spellInfo;
     [SerializeField] private Sprite redRuneSprite;
     [SerializeField] private Sprite yellowRuneSprite;
@@ -15,14 +18,17 @@ public class MainMenuCanvasScript : MonoBehaviour
     private List<List<RuneTypes>> activeSpells;
     private Dictionary<RuneTypes, Sprite> runeSprites = new Dictionary<RuneTypes, Sprite>();
     [SerializeField] private Button startButton;
+    public event Action<int> activeSpellChangedEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        activeSpellChangedEvent += Instance.ChangeActiveSpell;
+        setActiveSpellTextEvent += SetActiveSpellText;
         // Initialize the spellInfo array with the serialized GameObjects
         spellInfo = new GameObject[3][];
-        spellInfo[0] = spell1Info; 
-        spellInfo[1] = spell2Info; 
+        spellInfo[0] = spell1Info;
+        spellInfo[1] = spell2Info;
         spellInfo[2] = spell3Info;
         // Initialize the runeSprites dictionary with the corresponding sprites for each RuneType
         runeSprites[RuneTypes.Red] = redRuneSprite;
@@ -33,7 +39,7 @@ public class MainMenuCanvasScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void RandomizeSpells()
@@ -61,5 +67,15 @@ public class MainMenuCanvasScript : MonoBehaviour
     public void StartGame()
     {
         GameManager.Instance.StartGame();
+    }
+
+    public void SetActiveSpell(int index)
+    {
+        activeSpellChangedEvent?.Invoke(index);
+    }
+
+    public void SetActiveSpellText(int index,string text)
+    {         
+        spellNames[index].text = text;
     }
 }
