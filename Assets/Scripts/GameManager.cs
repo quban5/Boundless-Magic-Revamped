@@ -140,6 +140,10 @@ public class GameManager : MonoBehaviour
         spellCombo.Clear();
         player.GetComponent<PlayerScript>().SetRuneSprites(spellCombo);
     }
+    public void AddToEnemyList(GameObject enemy)
+    {
+        enemyList.Add(enemy);
+    }
 
     private void Curse()
     {
@@ -188,21 +192,6 @@ public class GameManager : MonoBehaviour
         }
 
         player.GetComponent<PlayerScript>().SetRuneSprites(spellCombo);
-    }
-
-    //Method for destroying all enemies and obstacles in the scene, used for the yellow enemy combo bonus
-    private void DestroyEverything()
-    {
-        foreach (GameObject enemy in enemyList)
-        {
-            Destroy(enemy);
-            enemyList.Remove(enemy);
-        }
-        foreach (GameObject obstacle in obstacleList)
-        {
-            Destroy(obstacle);
-            obstacleList.Remove(obstacle);
-        }
     }
     public float GetScore()
     {

@@ -20,7 +20,7 @@ public class EnemyScript : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        GameManager.Instance.AddToEnemyList(gameObject);
         health = maxHealth;
     }
 
