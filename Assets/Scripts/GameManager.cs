@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public static event Action fireballEvent;
     public static event Action timeslowEvent;
     public static event Action shieldEvent;
+    public static event Action swordEvent;
 
     [Header("Player")]
     [SerializeField] private GameObject player;
@@ -51,7 +52,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float[] runeChanceValues;
     [SerializeField] private float[] runeChanceThresholdValues;
     [SerializeField] private SpellTypes currentCastableSpell;
-
 
     //Dictionaries and lists
     private Dictionary<RuneTypes, float> runeChances = new Dictionary<RuneTypes, float>();
@@ -89,8 +89,8 @@ public class GameManager : MonoBehaviour
         unlockedSpells.Add(SpellTypes.Sword, false);
         unlockedSpells.Add(SpellTypes.TripleTrouble, false);
 
-        activeSpellTypes.Add(SpellTypes.Shield);
-        activeSpellTypes.Add(SpellTypes.Fireball);
+        activeSpellTypes.Add(SpellTypes.Sword);
+        activeSpellTypes.Add(SpellTypes.Curse);
         activeSpellTypes.Add(SpellTypes.TimeSlow);
 
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainScene") && runeChanceThresholds.Count == 0)
@@ -131,7 +131,7 @@ public class GameManager : MonoBehaviour
                 Curse();
                 break;
             case SpellTypes.Sword:
-                //Implement sword spell
+                swordEvent?.Invoke();
                 break;
             case SpellTypes.TripleTrouble:
                 //Implement triple trouble spell

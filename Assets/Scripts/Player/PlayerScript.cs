@@ -29,6 +29,8 @@ public class PlayerScript : MonoBehaviour
     private float timeSlowTimer;
     [SerializeField] private GameObject shield;
     private bool shieldActive;
+    [SerializeField] private GameObject sword;
+    private bool swordActive;
 
     private enum layerPositions
     {
@@ -50,6 +52,7 @@ public class PlayerScript : MonoBehaviour
         GameManager.fireballEvent += SpawnFireball;
         GameManager.timeslowEvent += ActivateTimeSlow;
         GameManager.shieldEvent += ActivateShield;
+        GameManager.swordEvent += ActivateSword;
         GameManager.Instance.SetPlayer(gameObject);
 
         foreach (SpriteRenderer rune in runeSprites)
@@ -103,8 +106,28 @@ public class PlayerScript : MonoBehaviour
 
     public void ActivateShield()
     {
+        DeactivateSword();
         shield.SetActive(true);
         shieldActive = true;
+    }
+
+    public void ActivateSword()
+    {
+        DeactivateShield();
+        sword.SetActive(true);
+        swordActive = true;
+    }
+
+    private void DeactivateShield()
+    {
+        shield.SetActive(false);
+        shieldActive = false;
+    }
+
+    private void DeactivateSword()
+    {
+        sword.SetActive(false);
+        swordActive = false;
     }
 
     private void Movement()
@@ -181,7 +204,19 @@ public class PlayerScript : MonoBehaviour
         {
             if (!invincible)
             {
-                Die();
+                if (swordActive)
+                {
+                    Destroy(collision.gameObject);
+                } 
+                else if (shieldActive)
+                {
+                    DeactivateShield();
+                    Destroy(collision.gameObject);
+                }
+                else
+                {
+                    Die();
+                }
             }
         }
         if (collision.gameObject.CompareTag("Obstacle"))
@@ -190,10 +225,15 @@ public class PlayerScript : MonoBehaviour
             {
                 if (shieldActive)
                 {
-                    shield.SetActive(false);
-                    shieldActive = false;
                     Destroy(collision.gameObject);
-                } else {
+                } 
+                else if (swordActive) 
+                {
+                    DeactivateSword();
+                    Destroy(collision.gameObject);
+                } 
+                else 
+                {
                     Die();
                 }
             }
@@ -203,6 +243,8 @@ public class PlayerScript : MonoBehaviour
             GameManager.Instance.SpawnChunk();
         }
     }
+
+
 
     private void Die()
     {
