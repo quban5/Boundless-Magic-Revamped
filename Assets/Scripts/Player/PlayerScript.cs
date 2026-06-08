@@ -19,6 +19,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float invincibilityDuration;
     [SerializeField] private SpriteRenderer[] runeSprites;
     [SerializeField] private GameObject runeHolder;
+    [SerializeField] private GameObject fireballPrefab;
 
     private enum layerPositions
     {
@@ -37,6 +38,7 @@ public class PlayerScript : MonoBehaviour
         layerPosition = layerPositions.UpMiddle;
         rb = GetComponent<Rigidbody2D>();
         GameManager.invincibilityEvent += StartInvincibility;
+        GameManager.fireballEvent += SpawnFireball;
         GameManager.Instance.SetPlayer(gameObject);
 
         foreach (SpriteRenderer rune in runeSprites)
@@ -116,6 +118,12 @@ public class PlayerScript : MonoBehaviour
             projectileScript.addSpeed(horizontalSpeed);
         }
     }
+
+    public void SpawnFireball()
+    {
+        Instantiate(fireballPrefab, transform.position + new Vector3(1, 0, 0), Quaternion.identity);
+    }
+
     private Coroutine invincibilityCoroutine;
 
     private void OnTriggerEnter2D(Collider2D collision)

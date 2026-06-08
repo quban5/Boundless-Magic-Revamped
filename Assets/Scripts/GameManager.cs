@@ -23,35 +23,41 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         Instance = this;
     }
-    //Event for when the player gets invincibility from killing enough red enemies
+
+    //Events
     public static event Action invincibilityEvent;
-    [Header("Objects")]
-    [Tooltip("The player object")]
+    public static event Action fireballEvent;
+
+    [Header("Player")]
     [SerializeField] private GameObject player;
-    [Header("Spawning")]
-    [Tooltip("The length of each chunk, used to determine where to spawn the next chunk")]
+
+    [Header("Chunk Generation")]
     [SerializeField] private float chunkLength;
-    [Tooltip("Distance between chunks")]
     [SerializeField] private float distanceBetweenChunks;
-    [Tooltip("List of chunks that can be used for level generation")]
     [SerializeField] private GameObject[] chunkList;
-    [Tooltip("List of enemies that are currently in the scene")]
-    private List<GameObject> enemyList = new List<GameObject>();
-    [Tooltip("List of obstacles that are currently in the scene")]
-    private List<GameObject> obstacleList = new List<GameObject>();
-    [Header("Other")]
-    [Tooltip("The player's current score")]
+    [SerializeField] private Vector3 chunkSpawnPos;
+    [SerializeField] private List<GameObject> spawnedChunks = new List<GameObject>();
+
+    [Header("Enemies & Obstacles")]
+    [SerializeField] private List<GameObject> enemyList = new List<GameObject>();
+    [SerializeField] private List<GameObject> obstacleList = new List<GameObject>();
+
+    [Header("Score")]
     [SerializeField] private float score;
+
+    [Header("Runes & Spells")]
+    [SerializeField] private float[] runeChanceValues;
+    [SerializeField] private float[] runeChanceThresholdValues;
+    [SerializeField] private SpellTypes currentCastableSpell;
+
+    //Dictionaries and lists
     private Dictionary<RuneTypes, float> runeChances = new Dictionary<RuneTypes, float>();
     public Dictionary<RuneTypes, float> runeChanceThresholds = new Dictionary<RuneTypes, float>();
     private Dictionary<SpellTypes, bool> unlockedSpells = new Dictionary<SpellTypes, bool>();
     private List<List<RuneTypes>> spellPool = new List<List<RuneTypes>>();
     private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
     private List<SpellTypes> activeSpellTypes = new List<SpellTypes>();
-    [SerializeField] private Vector3 chunkSpawnPos;
-    private List<GameObject> spawnedChunks = new List<GameObject>();
     private List<RuneTypes> spellCombo = new List<RuneTypes>();
-    private SpellTypes currentCastableSpell;
 
     public enum RuneTypes
     {
@@ -110,7 +116,7 @@ public class GameManager : MonoBehaviour
                 invincibilityEvent?.Invoke();
                 break;
             case SpellTypes.Fireball:
-                //Implement fireball spell
+                fireballEvent?.Invoke();
                 break;
             case SpellTypes.TimeSlow:
                 //Implement time slow spell
@@ -144,6 +150,7 @@ public class GameManager : MonoBehaviour
             Destroy(spawnedChunks[spawnedChunks.Count - 3]);
         }
     }
+
     //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
     {
@@ -151,9 +158,10 @@ public class GameManager : MonoBehaviour
 
         spellCombo.Add((RuneTypes)enemyType);
 
+        int i = 0;
+
         foreach (List<RuneTypes> spell in activeSpells)
         {
-            int i = 0;
             if (spell.OrderBy(x => x).SequenceEqual(spellCombo.OrderBy(x => x)))
             {
                 currentCastableSpell = activeSpellTypes[i];
