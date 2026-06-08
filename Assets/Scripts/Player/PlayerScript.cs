@@ -27,6 +27,8 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float timeSlowMinScale;
     private float timeSlowScale = 1;
     private float timeSlowTimer;
+    [SerializeField] private GameObject shield;
+    private bool shieldActive;
 
     private enum layerPositions
     {
@@ -47,6 +49,7 @@ public class PlayerScript : MonoBehaviour
         GameManager.invincibilityEvent += StartInvincibility;
         GameManager.fireballEvent += SpawnFireball;
         GameManager.timeslowEvent += ActivateTimeSlow;
+        GameManager.shieldEvent += ActivateShield;
         GameManager.Instance.SetPlayer(gameObject);
 
         foreach (SpriteRenderer rune in runeSprites)
@@ -96,6 +99,12 @@ public class PlayerScript : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ActivateShield()
+    {
+        shield.SetActive(true);
+        shieldActive = true;
     }
 
     private void Movement()
@@ -168,19 +177,25 @@ public class PlayerScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             if (!invincible)
             {
                 Die();
             }
-            else
+        }
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            if (!invincible)
             {
-                invincible = false;
-                renderer.color = Color.white;
-                StopCoroutine(invincibilityCoroutine);
-                invincibilityCoroutine = null;
-                Die();
+                if (shieldActive)
+                {
+                    shield.SetActive(false);
+                    shieldActive = false;
+                    Destroy(collision.gameObject);
+                } else {
+                    Die();
+                }
             }
         }
         if (collision.gameObject.CompareTag("ChunkEntry"))

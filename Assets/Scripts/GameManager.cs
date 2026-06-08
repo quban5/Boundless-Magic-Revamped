@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public static event Action invincibilityEvent;
     public static event Action fireballEvent;
     public static event Action timeslowEvent;
+    public static event Action shieldEvent;
 
     [Header("Player")]
     [SerializeField] private GameObject player;
@@ -88,7 +89,7 @@ public class GameManager : MonoBehaviour
         unlockedSpells.Add(SpellTypes.Sword, false);
         unlockedSpells.Add(SpellTypes.TripleTrouble, false);
 
-        activeSpellTypes.Add(SpellTypes.Invulnerability);
+        activeSpellTypes.Add(SpellTypes.Shield);
         activeSpellTypes.Add(SpellTypes.Fireball);
         activeSpellTypes.Add(SpellTypes.TimeSlow);
 
@@ -124,10 +125,10 @@ public class GameManager : MonoBehaviour
                 timeslowEvent?.Invoke();
                 break;
             case SpellTypes.Shield:
-                //Implement shield spell
+                shieldEvent?.Invoke();
                 break;
             case SpellTypes.Curse:
-                //Implement curse spell
+                Curse();
                 break;
             case SpellTypes.Sword:
                 //Implement sword spell
@@ -139,6 +140,16 @@ public class GameManager : MonoBehaviour
         spellCombo.Clear();
         player.GetComponent<PlayerScript>().SetRuneSprites(spellCombo);
     }
+
+    private void Curse()
+    {
+        foreach (GameObject enemy in enemyList)
+        {
+            Destroy(enemy);
+        }
+        enemyList.Clear();
+    }
+
     public void SpawnChunk()
     {
         chunkSpawnPos += new Vector3(chunkLength + distanceBetweenChunks, 0, 0);
