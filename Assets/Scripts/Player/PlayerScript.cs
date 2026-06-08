@@ -21,6 +21,13 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private GameObject runeHolder;
     [SerializeField] private GameObject fireballPrefab;
 
+    [Header("Powerups")]
+    private bool timeSlowActivated;
+    [SerializeField] private float timeSlowDuration;
+    [SerializeField] private float timeSlowMinScale;
+    private float timeSlowScale = 1;
+    private float timeSlowTimer;
+
     private enum layerPositions
     {
         Top = 0,
@@ -39,6 +46,7 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         GameManager.invincibilityEvent += StartInvincibility;
         GameManager.fireballEvent += SpawnFireball;
+        GameManager.timeslowEvent += ActivateTimeSlow;
         GameManager.Instance.SetPlayer(gameObject);
 
         foreach (SpriteRenderer rune in runeSprites)
@@ -53,15 +61,47 @@ public class PlayerScript : MonoBehaviour
         {
             Movement();
             Shooting();
+            CalculateTimeSlow();
             horizontalSpeed += Time.deltaTime * speedIncrease;
             runeHolder.transform.RotateAround(runeHolder.transform.position, Vector3.forward, 360 * Time.deltaTime);
+
+        }
+    }
+
+    public void ActivateTimeSlow()
+    {
+        timeSlowActivated = true;
+        timeSlowScale = timeSlowMinScale;
+        timeSlowTimer = timeSlowDuration;
+    }
+
+    private void CalculateTimeSlow()
+    {
+
+        if (timeSlowActivated)
+        {
+            timeSlowTimer -= Time.deltaTime;
+            if (timeSlowTimer <= 0)
+            {
+                timeSlowActivated = false;
+                timeSlowScale = 1;
+            }
+            else
+            {
+                float progress = (timeSlowDuration - timeSlowTimer) / timeSlowDuration;
+                Debug.Log(progress);
+                if (progress > timeSlowMinScale)
+                {
+                    timeSlowScale = progress;
+                }
+            }
         }
     }
 
     private void Movement()
     {
         //Move right
-        rb.linearVelocity = new Vector2(horizontalSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(horizontalSpeed * timeSlowScale, rb.linearVelocity.y);
         //Move up
         if (PlayerInputManager.Instance.upClicked)
         {

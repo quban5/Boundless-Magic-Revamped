@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     //Events
     public static event Action invincibilityEvent;
     public static event Action fireballEvent;
+    public static event Action timeslowEvent;
 
     [Header("Player")]
     [SerializeField] private GameObject player;
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float[] runeChanceValues;
     [SerializeField] private float[] runeChanceThresholdValues;
     [SerializeField] private SpellTypes currentCastableSpell;
+
 
     //Dictionaries and lists
     private Dictionary<RuneTypes, float> runeChances = new Dictionary<RuneTypes, float>();
@@ -119,7 +121,7 @@ public class GameManager : MonoBehaviour
                 fireballEvent?.Invoke();
                 break;
             case SpellTypes.TimeSlow:
-                //Implement time slow spell
+                timeslowEvent?.Invoke();
                 break;
             case SpellTypes.Shield:
                 //Implement shield spell
@@ -296,4 +298,5 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Over! Final Score: " + score);
         SceneManager.LoadScene("TitleScreen");
     }
+
 }
