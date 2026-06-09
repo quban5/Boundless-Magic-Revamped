@@ -1,4 +1,7 @@
+using NUnit.Framework;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
@@ -7,13 +10,26 @@ public class PlayerScript : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float horizontalSpeed;
     [SerializeField] private float verticalSpeed;
     [SerializeField] private float speedIncrease;
     [SerializeField] private float[] layerPositionValues;
     [SerializeField] private bool dead;
     [SerializeField] private bool invincible;
     [SerializeField] private float invincibilityDuration;
+    [SerializeField] private SpriteRenderer[] runeSprites;
+    [SerializeField] private GameObject runeHolder;
+    [SerializeField] private GameObject fireballPrefab;
+
+    [Header("Powerups")]
+    private bool timeSlowActivated;
+    [SerializeField] private float timeSlowDuration;
+    [SerializeField] private float timeSlowMinScale;
+    private float timeSlowScale = 1;
+    private float timeSlowTimer;
+    [SerializeField] private GameObject shield;
+    private bool shieldActive;
+    [SerializeField] private GameObject sword;
+    private bool swordActive;
 
     private enum layerPositions
     {
@@ -32,7 +48,16 @@ public class PlayerScript : MonoBehaviour
         layerPosition = layerPositions.UpMiddle;
         rb = GetComponent<Rigidbody2D>();
         GameManager.invincibilityEvent += StartInvincibility;
+        GameManager.fireballEvent += SpawnFireball;
+        GameManager.timeslowEvent += ActivateTimeSlow;
+        GameManager.shieldEvent += ActivateShield;
+        GameManager.swordEvent += ActivateSword;
         GameManager.Instance.SetPlayer(gameObject);
+
+        foreach (SpriteRenderer rune in runeSprites)
+        {
+            rune.gameObject.SetActive(false);
+        }
     }
 
     void Update()
@@ -41,14 +66,66 @@ public class PlayerScript : MonoBehaviour
         {
             Movement();
             Shooting();
-            horizontalSpeed += Time.deltaTime * speedIncrease;
+            CalculateTimeSlow();
+            runeHolder.transform.RotateAround(runeHolder.transform.position, Vector3.forward, 360 * Time.deltaTime);
+
         }
+    }
+
+    public void ActivateTimeSlow()
+    {
+        timeSlowActivated = true;
+        timeSlowScale = timeSlowMinScale;
+        timeSlowTimer = timeSlowDuration;
+    }
+
+   private void CalculateTimeSlow()
+    {
+        if (timeSlowActivated)
+        {
+            timeSlowTimer -= Time.deltaTime;
+            if (timeSlowTimer <= 0)
+            {
+                timeSlowActivated = false;
+                GameManager.Instance.SetTimeSlowScale(1f); // Reset skali w Managerze
+            }
+            else
+            {
+                float progress = (timeSlowDuration - timeSlowTimer) / timeSlowDuration;
+                float currentScale = Mathf.Max(progress, timeSlowMinScale);
+                GameManager.Instance.SetTimeSlowScale(currentScale); // Aktualizacja skali
+            }
+        }
+    }
+
+    public void ActivateShield()
+    {
+        DeactivateSword();
+        shield.SetActive(true);
+        shieldActive = true;
+    }
+
+    public void ActivateSword()
+    {
+        DeactivateShield();
+        sword.SetActive(true);
+        swordActive = true;
+    }
+
+    private void DeactivateShield()
+    {
+        shield.SetActive(false);
+        shieldActive = false;
+    }
+
+    private void DeactivateSword()
+    {
+        sword.SetActive(false);
+        swordActive = false;
     }
 
     private void Movement()
     {
-        //Move right
-        rb.linearVelocity = new Vector2(horizontalSpeed, rb.linearVelocity.y);
         //Move up
         if (PlayerInputManager.Instance.upClicked)
         {
@@ -102,32 +179,70 @@ public class PlayerScript : MonoBehaviour
         {
             GameObject newBullet = Instantiate(projectilePrefab, transform.position, transform.rotation);
             ProjectileScript projectileScript = newBullet.GetComponent<ProjectileScript>();
-            projectileScript.addSpeed(horizontalSpeed);
+            projectileScript.addSpeed(GameManager.Instance.horizontalSpeed + 5f);
         }
     }
+
+    public void SpawnFireball()
+    {
+        Instantiate(fireballPrefab, transform.position + new Vector3(1, 0, 0), Quaternion.identity);
+    }
+
     private Coroutine invincibilityCoroutine;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             if (!invincible)
             {
-                horizontalSpeed = 0;
-                rb.linearVelocity = new Vector2(0, 0);
-                dead = true;
-            } else
-            {
-                invincible = false;
-                renderer.color = Color.white;
-                StopCoroutine(invincibilityCoroutine);
-                invincibilityCoroutine = null;
+                if (swordActive)
+                {
+                    Destroy(collision.gameObject);
+                } 
+                else if (shieldActive)
+                {
+                    DeactivateShield();
+                    Destroy(collision.gameObject);
+                }
+                else
+                {
+                    Die();
+                }
             }
         }
-        if (collision.gameObject.CompareTag("ChunkEntry"))
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            if (!invincible)
+            {
+                if (shieldActive)
+                {
+                    Destroy(collision.gameObject);
+                } 
+                else if (swordActive) 
+                {
+                    DeactivateSword();
+                    Destroy(collision.gameObject);
+                } 
+                else 
+                {
+                    Die();
+                }
+            }
+        }
+        if (collision.gameObject.CompareTag("SpawnChunkTrigger"))
         {
             GameManager.Instance.SpawnChunk();
         }
+    }
+
+
+
+    private void Die()
+    {
+        GameManager.Instance.horizontalSpeed = 0;
+        dead = true;
+        GameManager.Instance.GameOver();
     }
 
     public void StartInvincibility()
@@ -171,5 +286,34 @@ public class PlayerScript : MonoBehaviour
         invincible = false;
         renderer.color = Color.white;
         invincibilityCoroutine = null;
+    }
+
+    public void SetRuneSprites(List<GameManager.RuneTypes> runes)
+    {
+        int i = 0;
+        foreach (SpriteRenderer runeSprite in runeSprites)
+        {
+            if (runes.Count > i)
+            {
+                switch (runes[i])
+                {
+                    case GameManager.RuneTypes.Red:
+                        runeSprite.color = Color.red;
+                        break;
+                    case GameManager.RuneTypes.Yellow:
+                        runeSprite.color = Color.yellow;
+                        break;
+                    case GameManager.RuneTypes.Blue:
+                        runeSprite.color = Color.blue;
+                        break;
+                }
+                runeSprite.gameObject.SetActive(true);
+                i++;
+            }
+            else
+            {
+                runeSprite.gameObject.SetActive(false);
+            }
+        }
     }
 }

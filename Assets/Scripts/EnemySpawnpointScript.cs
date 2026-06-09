@@ -1,14 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
+using static GameManager;
 
 public class EnemySpawnpointScript : MonoBehaviour
 {
     private GameObject player;
     [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private float playerDistance;
-    [SerializeField] private float distanceToSpawn;
+    [SerializeField] private float distanceToSpawn = 8.5f;
+    private float playerDistance;
+    private Dictionary<RuneTypes, float> runeChanceThresholds;
+
     void Start()
     {
-        player = GameManager.Instance.GetPlayer();
+        player = Instance.GetPlayer();
+        runeChanceThresholds = Instance.GetRuneChanceThresholds();
     }
 
     void Update()
@@ -16,34 +21,32 @@ public class EnemySpawnpointScript : MonoBehaviour
         if (player != null)
         {
             playerDistance = transform.position.x - player.transform.position.x;
-        }
-        if (playerDistance < distanceToSpawn)
-        {
-            SpawnEnemy();
+
+            if (playerDistance < distanceToSpawn)
+            {
+                SpawnEnemy();
+            }
         }
     }
 
     private void SpawnEnemy()
     {
         GameObject spawnedEnemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+
+        if (transform.parent != null)
+        {
+            spawnedEnemy.transform.SetParent(transform.parent);
+        }
+        
         EnemyScript enemyScript = spawnedEnemy.GetComponent<EnemyScript>();
         float randomEnemyType = Random.Range(0f, 1f);
 
-        if (randomEnemyType <= 0.4f)
-        {
+        if (randomEnemyType <= runeChanceThresholds[RuneTypes.Red]) {
             enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Red);
-        }
-        else if (randomEnemyType > 0.4f && randomEnemyType <= 0.7f)
-        {
-            enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Blue);
-        }
-        else if (randomEnemyType > 0.7f && randomEnemyType <= 0.9f)
-        {
-            enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Green);
-        }
-        else
-        {
+        } else if (randomEnemyType <= runeChanceThresholds[RuneTypes.Yellow]) {
             enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Yellow);
+        } else {
+            enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Blue);
         }
 
 

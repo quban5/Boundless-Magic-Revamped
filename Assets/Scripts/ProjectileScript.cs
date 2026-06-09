@@ -5,6 +5,13 @@ public class ProjectileScript : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float lifetime;
+    [SerializeField] private ProjectileTypes projectileType;
+
+    private enum ProjectileTypes
+    {
+        Star,
+        Fireball
+    }
 
     void Start()
     {
@@ -24,7 +31,12 @@ public class ProjectileScript : MonoBehaviour
             enemy.GetHit();
         }
 
-        if (!collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Obstacle") && projectileType == ProjectileTypes.Fireball)
+        {
+            Destroy(collision.gameObject);
+        }
+
+        if (!collision.gameObject.CompareTag("Player") && projectileType != ProjectileTypes.Fireball)
         {
             Destroy(gameObject);
         }
