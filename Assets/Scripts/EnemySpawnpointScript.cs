@@ -6,9 +6,10 @@ public class EnemySpawnpointScript : MonoBehaviour
 {
     private GameObject player;
     [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private float playerDistance;
-    [SerializeField] private float distanceToSpawn;
+    [SerializeField] private float distanceToSpawn = 8.5f;
+    private float playerDistance;
     private Dictionary<RuneTypes, float> runeChanceThresholds;
+
     void Start()
     {
         player = Instance.GetPlayer();
@@ -20,16 +21,23 @@ public class EnemySpawnpointScript : MonoBehaviour
         if (player != null)
         {
             playerDistance = transform.position.x - player.transform.position.x;
-        }
-        if (playerDistance < distanceToSpawn)
-        {
-            SpawnEnemy();
+
+            if (playerDistance < distanceToSpawn)
+            {
+                SpawnEnemy();
+            }
         }
     }
 
     private void SpawnEnemy()
     {
         GameObject spawnedEnemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+
+        if (transform.parent != null)
+        {
+            spawnedEnemy.transform.SetParent(transform.parent);
+        }
+        
         EnemyScript enemyScript = spawnedEnemy.GetComponent<EnemyScript>();
         float randomEnemyType = Random.Range(0f, 1f);
 

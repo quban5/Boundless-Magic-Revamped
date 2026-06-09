@@ -1,3 +1,4 @@
+using System.Numerics;
 using UnityEngine;
 
 public class ChunkScript : MonoBehaviour
@@ -8,5 +9,8 @@ public class ChunkScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        float speed = GameManager.Instance.GetCurrentSpeed();
+        transform.Translate(UnityEngine.Vector3.left * speed * Time.deltaTime);
     }
 }

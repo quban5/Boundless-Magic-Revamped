@@ -34,10 +34,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Player")]
     [SerializeField] private GameObject player;
-
+    [Header("Movement Settings")]
+    [SerializeField] private float speedIncrease = 0.1f;
+    [SerializeField] public float horizontalSpeed;
+    private float timeSlowScale = 1f;
     [Header("Chunk Generation")]
-    [SerializeField] private float chunkLength;
-    [SerializeField] private float distanceBetweenChunks;
     [SerializeField] private GameObject[] chunkList;
     [SerializeField] private Vector3 chunkSpawnPos;
     [SerializeField] private List<GameObject> spawnedChunks = new List<GameObject>();
@@ -140,6 +141,8 @@ public class GameManager : MonoBehaviour
         //Restarting the game when the restart button is clicked
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainScene"))
         {
+            horizontalSpeed += speedIncrease * Time.deltaTime;
+
             if (PlayerInputManager.Instance.restartClicked)
             {
                 string currentScene = SceneManager.GetActiveScene().name;
@@ -192,17 +195,26 @@ public class GameManager : MonoBehaviour
 
     public void SpawnChunk()
     {
-        chunkSpawnPos += new Vector3(chunkLength + distanceBetweenChunks, 0, 0);
         int chunkAmount = chunkList.Length;
         int chunkNumber = UnityEngine.Random.Range(0, chunkAmount);
         GameObject loadedChunk = chunkList[chunkNumber];
-        GameObject currentChunk = Instantiate(loadedChunk, chunkSpawnPos + new Vector3(chunkLength / 2, 0, 0), Quaternion.identity);
+        GameObject currentChunk = Instantiate(loadedChunk, chunkSpawnPos, Quaternion.identity);
         spawnedChunks.Add(currentChunk);
         if (spawnedChunks.Count >= 3)
         {
             Destroy(spawnedChunks[spawnedChunks.Count - 3]);
         }
     }
+
+    public float GetCurrentSpeed()
+    {
+        return horizontalSpeed * timeSlowScale;
+    }
+
+    public void SetTimeSlowScale(float scale)
+{
+    timeSlowScale = scale;
+}
 
     //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)

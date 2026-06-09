@@ -10,7 +10,6 @@ public class PlayerScript : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float horizontalSpeed;
     [SerializeField] private float verticalSpeed;
     [SerializeField] private float speedIncrease;
     [SerializeField] private float[] layerPositionValues;
@@ -68,7 +67,6 @@ public class PlayerScript : MonoBehaviour
             Movement();
             Shooting();
             CalculateTimeSlow();
-            horizontalSpeed += Time.deltaTime * speedIncrease;
             runeHolder.transform.RotateAround(runeHolder.transform.position, Vector3.forward, 360 * Time.deltaTime);
 
         }
@@ -81,25 +79,21 @@ public class PlayerScript : MonoBehaviour
         timeSlowTimer = timeSlowDuration;
     }
 
-    private void CalculateTimeSlow()
+   private void CalculateTimeSlow()
     {
-
         if (timeSlowActivated)
         {
             timeSlowTimer -= Time.deltaTime;
             if (timeSlowTimer <= 0)
             {
                 timeSlowActivated = false;
-                timeSlowScale = 1;
+                GameManager.Instance.SetTimeSlowScale(1f); // Reset skali w Managerze
             }
             else
             {
                 float progress = (timeSlowDuration - timeSlowTimer) / timeSlowDuration;
-                Debug.Log(progress);
-                if (progress > timeSlowMinScale)
-                {
-                    timeSlowScale = progress;
-                }
+                float currentScale = Mathf.Max(progress, timeSlowMinScale);
+                GameManager.Instance.SetTimeSlowScale(currentScale); // Aktualizacja skali
             }
         }
     }
@@ -132,8 +126,6 @@ public class PlayerScript : MonoBehaviour
 
     private void Movement()
     {
-        //Move right
-        rb.linearVelocity = new Vector2(horizontalSpeed * timeSlowScale, rb.linearVelocity.y);
         //Move up
         if (PlayerInputManager.Instance.upClicked)
         {
@@ -187,7 +179,7 @@ public class PlayerScript : MonoBehaviour
         {
             GameObject newBullet = Instantiate(projectilePrefab, transform.position, transform.rotation);
             ProjectileScript projectileScript = newBullet.GetComponent<ProjectileScript>();
-            projectileScript.addSpeed(horizontalSpeed);
+            projectileScript.addSpeed(GameManager.Instance.horizontalSpeed + 5f);
         }
     }
 
@@ -238,7 +230,7 @@ public class PlayerScript : MonoBehaviour
                 }
             }
         }
-        if (collision.gameObject.CompareTag("ChunkEntry"))
+        if (collision.gameObject.CompareTag("SpawnChunkTrigger"))
         {
             GameManager.Instance.SpawnChunk();
         }
@@ -248,8 +240,7 @@ public class PlayerScript : MonoBehaviour
 
     private void Die()
     {
-        horizontalSpeed = 0;
-        rb.linearVelocity = new Vector2(0, 0);
+        GameManager.Instance.horizontalSpeed = 0;
         dead = true;
         GameManager.Instance.GameOver();
     }
