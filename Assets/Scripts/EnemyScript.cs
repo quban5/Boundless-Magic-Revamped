@@ -33,7 +33,7 @@ public class EnemyScript : MonoBehaviour
             Destroy(gameObject);
         }
         float playerXPos = GameManager.Instance.GetPlayer().transform.position.x;
-        if (playerXPos-5>transform.position.x)
+        if (playerXPos - 5 > transform.position.x)
         {
             Destroy(gameObject);
         }
