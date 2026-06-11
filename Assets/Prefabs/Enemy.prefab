@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 6598764768276263387}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.06, y: 0.22, z: 0}
-  m_LocalScale: {x: 0.34403336, y: 0.33415943, z: 3.0963}
+  m_LocalPosition: {x: -0.1959, y: 0.3017, z: 0}
+  m_LocalScale: {x: 0.9934418, y: 1.0025156, z: 3.0963}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7581517305630818631}
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 297761703447499198, guid: 3542a380a38499a458ff5c6e33463532, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 38f788fc169a4c84fba65e8fb04ddb32, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -202,10 +202,10 @@ MonoBehaviour:
   maxHealth: 1
   health: 0
   enemyType: 0
-  yellowSprite: {fileID: 407907198125173640, guid: 91cf2014724ac0f4c8b97220f485eef9, type: 3}
-  redSprite: {fileID: 297761703447499198, guid: 3542a380a38499a458ff5c6e33463532, type: 3}
-  greenSprite: {fileID: 1288079852128547595, guid: 925b5cdfff4a2474d92a4d9282415f0e, type: 3}
-  blueSprite: {fileID: 3958800376534163861, guid: 5406dae589f5d7a438c23ad35d473719, type: 3}
+  yellowSprite: {fileID: 21300000, guid: 672b23cb3a9629b478f48d737a342b8d, type: 3}
+  redSprite: {fileID: 21300000, guid: 38f788fc169a4c84fba65e8fb04ddb32, type: 3}
+  greenSprite: {fileID: 21300000, guid: a5168b105f64b0c4683aed6b4a383257, type: 3}
+  blueSprite: {fileID: 21300000, guid: 1f99f63fb8bfea14198693f386dd507f, type: 3}
   spriteRenderer: {fileID: 544391589114945159}
 --- !u!50 &2264937554912360533
 Rigidbody2D:
