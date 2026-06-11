@@ -53,6 +53,7 @@ public class PlayerScript : MonoBehaviour
         GameManager.shieldEvent += ActivateShield;
         GameManager.swordEvent += ActivateSword;
         GameManager.Instance.SetPlayer(gameObject);
+        dead = false;
 
         foreach (SpriteRenderer rune in runeSprites)
         {

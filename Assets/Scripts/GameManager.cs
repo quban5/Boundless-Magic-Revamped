@@ -344,6 +344,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over! Final Score: " + score);
+        score = 0;
         SceneManager.LoadScene("TitleScreen");
     }
 
