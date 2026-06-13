@@ -35,13 +35,39 @@ public class GameManager : MonoBehaviour
     [Header("Player")]
     [SerializeField] private GameObject player;
     [Header("Movement Settings")]
+    [SerializeField] public float initialHorizontalSpeed;
+    public float horizontalSpeed;
     [SerializeField] private float speedIncrease = 0.1f;
-    [SerializeField] public float horizontalSpeed;
     private float timeSlowScale = 1f;
     [Header("Chunk Generation")]
-    [SerializeField] private GameObject[] chunkList;
+    private int currentChunkLoopIndex = 0;
+    public enum ChunkDifficulties
+    {
+        Easy,
+        Medium,
+        Hard,
+        Reward
+    }
+    [SerializeField] private GameObject[] easyChunkList;
+    [SerializeField] private GameObject[] mediumChunkList;
+    [SerializeField] private GameObject[] hardChunkList;
+    [SerializeField] private GameObject[] rewardChunkList;
+    [SerializeField] private List<ChunkDifficulties> chunkLoopOrder = new List<ChunkDifficulties>
+    {
+        ChunkDifficulties.Easy,
+        ChunkDifficulties.Medium,
+        ChunkDifficulties.Hard,
+        ChunkDifficulties.Reward,
+        ChunkDifficulties.Medium,
+        ChunkDifficulties.Hard,
+        ChunkDifficulties.Easy,
+        ChunkDifficulties.Medium,
+        ChunkDifficulties.Hard
+    };
     [SerializeField] private Vector3 chunkSpawnPos;
     [SerializeField] private List<GameObject> spawnedChunks = new List<GameObject>();
+    private int numberOfChunkLoopIterations;
+    bool isFirstChunkToSpawn = true;
 
     [Header("Enemies & Obstacles")]
     [SerializeField] private List<GameObject> enemyList = new List<GameObject>();
@@ -195,10 +221,12 @@ public class GameManager : MonoBehaviour
 
     public void SpawnChunk()
     {
+        GameObject[] chunkList = GetNextChunkListToSpawnFrom();
         int chunkAmount = chunkList.Length;
         int chunkNumber = UnityEngine.Random.Range(0, chunkAmount);
         GameObject loadedChunk = chunkList[chunkNumber];
         GameObject currentChunk = Instantiate(loadedChunk, chunkSpawnPos, Quaternion.identity);
+        Debug.Log(currentChunk);
         spawnedChunks.Add(currentChunk);
         if (spawnedChunks.Count >= 3)
         {
@@ -206,9 +234,39 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private GameObject[] GetNextChunkListToSpawnFrom()
+    {
+        if (isFirstChunkToSpawn == true)
+        {
+            isFirstChunkToSpawn = false;
+        }
+        else if (currentChunkLoopIndex == 0)
+        {
+            numberOfChunkLoopIterations ++;
+            Debug.Log(numberOfChunkLoopIterations + " chunk iterations");
+        }
+
+        ChunkDifficulties currentDifficulty = chunkLoopOrder[currentChunkLoopIndex];
+        currentChunkLoopIndex = (currentChunkLoopIndex + 1) % chunkLoopOrder.Count;
+
+        switch (currentDifficulty)
+        {
+            case ChunkDifficulties.Easy: return easyChunkList;
+            case ChunkDifficulties.Medium: return mediumChunkList;
+            case ChunkDifficulties.Hard: return hardChunkList;
+            case ChunkDifficulties.Reward: return rewardChunkList;
+            default: return easyChunkList;
+        }
+    }
+
     public float GetCurrentSpeed()
     {
         return horizontalSpeed * timeSlowScale;
+    }
+    
+    public void ResetHorizontalSpeed()
+    {
+        horizontalSpeed = initialHorizontalSpeed;
     }
 
     public void SetTimeSlowScale(float scale)
@@ -339,12 +397,17 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene("MainScene");
+        horizontalSpeed = initialHorizontalSpeed;
     }
 
     public void GameOver()
     {
         Debug.Log("Game Over! Final Score: " + score);
+        ResetHorizontalSpeed();
         score = 0;
+        currentChunkLoopIndex = 0;
+        numberOfChunkLoopIterations = 0;
+        isFirstChunkToSpawn = true;
         SceneManager.LoadScene("TitleScreen");
     }
 

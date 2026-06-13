@@ -1875,6 +1875,10 @@ PrefabInstance:
       propertyPath: timeSlowDuration
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3230979066575609027, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
+      propertyPath: initialHorizontalSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7761374521394925329, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.09113
