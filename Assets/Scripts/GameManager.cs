@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NUnit.Framework;
 //using UnityEditor.U2D.Aseprite;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -38,7 +40,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] public float initialHorizontalSpeed;
     public float horizontalSpeed;
     [SerializeField] private float speedIncrease = 0.1f;
+    [Serializable] public struct SpeedCaps
+    {
+        [Tooltip("Number of chunk loop iterations required for speed increase")]
+        public int requiredNumberOfChunkLoopIterations;
+
+        [Tooltip("Target cap to increase speed to")]
+        public float targetSpeedCap;
+    }
+    [SerializeField] private List<SpeedCaps> speedCaps = new List<SpeedCaps>();
+    private float currentTargetSpeedCap;
     private float timeSlowScale = 1f;
+    [SerializeField] private float maxSpeedLimit;
+    private bool isMaxSpeedReached = false;
+
     [Header("Chunk Generation")]
     private int currentChunkLoopIndex = 0;
     public enum ChunkDifficulties
@@ -167,8 +182,11 @@ public class GameManager : MonoBehaviour
         //Restarting the game when the restart button is clicked
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainScene"))
         {
-            horizontalSpeed += speedIncrease * Time.deltaTime;
-
+            if (isMaxSpeedReached == false)
+            {
+                IncreaseSpeed();
+            }
+            
             if (PlayerInputManager.Instance.restartClicked)
             {
                 string currentScene = SceneManager.GetActiveScene().name;
@@ -238,12 +256,14 @@ public class GameManager : MonoBehaviour
     {
         if (isFirstChunkToSpawn == true)
         {
+            CheckSpeedCaps();
             isFirstChunkToSpawn = false;
         }
         else if (currentChunkLoopIndex == 0)
         {
             numberOfChunkLoopIterations ++;
             Debug.Log(numberOfChunkLoopIterations + " chunk iterations");
+            CheckSpeedCaps();
         }
 
         ChunkDifficulties currentDifficulty = chunkLoopOrder[currentChunkLoopIndex];
@@ -256,6 +276,29 @@ public class GameManager : MonoBehaviour
             case ChunkDifficulties.Hard: return hardChunkList;
             case ChunkDifficulties.Reward: return rewardChunkList;
             default: return easyChunkList;
+        }
+    }
+
+    private void IncreaseSpeed()
+    {
+        if (horizontalSpeed < currentTargetSpeedCap)
+        {
+            horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, currentTargetSpeedCap, speedIncrease * Time.deltaTime);
+         }
+        else if (horizontalSpeed == maxSpeedLimit)
+        {
+            isMaxSpeedReached = true;
+        }
+    }
+
+    private void CheckSpeedCaps()
+    {
+        foreach (var cap in speedCaps)
+        {
+            if (numberOfChunkLoopIterations >= cap.requiredNumberOfChunkLoopIterations)
+            {
+                currentTargetSpeedCap = cap.targetSpeedCap;
+            }
         }
     }
 
@@ -407,7 +450,13 @@ public class GameManager : MonoBehaviour
         score = 0;
         currentChunkLoopIndex = 0;
         numberOfChunkLoopIterations = 0;
+        currentTargetSpeedCap = initialHorizontalSpeed;
         isFirstChunkToSpawn = true;
+        isMaxSpeedReached = false;
+        spawnedChunks.Clear();
+        enemyList.Clear();
+        obstacleList.Clear();
+        spellCombo.Clear();
         SceneManager.LoadScene("TitleScreen");
     }
 
