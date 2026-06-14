@@ -241,7 +241,6 @@ public class PlayerScript : MonoBehaviour
 
     private void Die()
     {
-        GameManager.Instance.horizontalSpeed = 0;
         dead = true;
         GameManager.Instance.GameOver();
     }
