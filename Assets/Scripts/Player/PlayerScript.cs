@@ -68,7 +68,7 @@ public class PlayerScript : MonoBehaviour
             Movement();
             Shooting();
             CalculateTimeSlow();
-            runeHolder.transform.RotateAround(runeHolder.transform.position, Vector3.forward, 360 * Time.deltaTime);
+            //runeHolder.transform.RotateAround(runeHolder.transform.position, Vector3.forward, 360 * Time.deltaTime);
 
         }
     }
