@@ -45,8 +45,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   player: {fileID: 526171442341463024, guid: e4204abe967884a48ad200faa468964b, type: 3}
-  speedIncrease: 0.1
-  horizontalSpeed: 3
+  initialHorizontalSpeed: 4
+  horizontalSpeed: 4
+  speedIncrease: 0.05
+  speedCaps:
+  - requiredNumberOfChunkLoopIterations: 0
+    targetSpeedCap: 6
+  - requiredNumberOfChunkLoopIterations: 1
+    targetSpeedCap: 8.5
+  - requiredNumberOfChunkLoopIterations: 3
+    targetSpeedCap: 10
+  - requiredNumberOfChunkLoopIterations: 4
+    targetSpeedCap: 12
+  - requiredNumberOfChunkLoopIterations: 5
+    targetSpeedCap: 14
+  - requiredNumberOfChunkLoopIterations: 8
+    targetSpeedCap: 15
+  maxSpeedLimit: 15
   easyChunkList:
   - {fileID: 526171442341463024, guid: 9b9a2e18ea927f347b220c88ef4c2862, type: 3}
   - {fileID: 526171442341463024, guid: 66259aa882f0fe1418ff9c0c981c8485, type: 3}
@@ -64,19 +79,7 @@ MonoBehaviour:
   - {fileID: 526171442341463024, guid: 873be6858d64e4e459fc19d7cef0090e, type: 3}
   rewardChunkList:
   - {fileID: 526171442341463024, guid: d621c89a3cbb60c46bec925409288ee0, type: 3}
-  chunkList:
-  - {fileID: 526171442341463024, guid: 9b9a2e18ea927f347b220c88ef4c2862, type: 3}
-  - {fileID: 526171442341463024, guid: 66259aa882f0fe1418ff9c0c981c8485, type: 3}
-  - {fileID: 526171442341463024, guid: 318707e4eb7495647b0be87b89044bb0, type: 3}
-  - {fileID: 526171442341463024, guid: 8d6c9b686e97f7440bb5bd7997ab40ee, type: 3}
-  - {fileID: 526171442341463024, guid: 4047320855808d249a4aa5bf9a8ba534, type: 3}
-  - {fileID: 526171442341463024, guid: 885f9002daf33db42876e456885aa3d5, type: 3}
-  - {fileID: 526171442341463024, guid: a1800a034650c3b4bb88e0afcf2b0196, type: 3}
-  - {fileID: 526171442341463024, guid: af028936968b9a049b862894b777898d, type: 3}
-  - {fileID: 526171442341463024, guid: 97b004d91826c3940a697b959bb52457, type: 3}
-  - {fileID: 526171442341463024, guid: 7030ec2457dfd8448aceea6acd4ee6eb, type: 3}
-  - {fileID: 526171442341463024, guid: 13da8c6ef55d02e47985e66798c06f3a, type: 3}
-  - {fileID: 526171442341463024, guid: 873be6858d64e4e459fc19d7cef0090e, type: 3}
+  chunkLoopOrder: 000000000100000002000000030000000100000002000000000000000100000002000000
   chunkSpawnPos: {x: 8.36, y: 0, z: 0}
   spawnedChunks: []
   enemyList: []
