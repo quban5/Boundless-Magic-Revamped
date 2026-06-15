@@ -30,6 +30,9 @@ public class PlayerScript : MonoBehaviour
     private bool shieldActive;
     [SerializeField] private GameObject sword;
     private bool swordActive;
+    private Color yellowColor;
+    private Color redColor;
+    private Color blueColor;
 
     private enum layerPositions
     {
@@ -54,6 +57,9 @@ public class PlayerScript : MonoBehaviour
         GameManager.swordEvent += ActivateSword;
         GameManager.Instance.SetPlayer(gameObject);
         dead = false;
+        yellowColor = new Color(0.98f, 0.95f, 0.21f, 0.16f);
+        redColor = new Color(0.67f, 0.2f, 0.2f, 0.16f);
+        blueColor = new Color(0.39f, 0.61f, 1f, 0.16f);
 
         foreach (SpriteRenderer rune in runeSprites)
         {
@@ -298,13 +304,13 @@ public class PlayerScript : MonoBehaviour
                 switch (runes[i])
                 {
                     case GameManager.RuneTypes.Red:
-                        runeSprite.color = Color.red;
+                        runeSprite.color = redColor;
                         break;
                     case GameManager.RuneTypes.Yellow:
-                        runeSprite.color = Color.yellow;
+                        runeSprite.color = yellowColor;
                         break;
                     case GameManager.RuneTypes.Blue:
-                        runeSprite.color = Color.blue;
+                        runeSprite.color = blueColor;
                         break;
                 }
                 runeSprite.gameObject.SetActive(true);
