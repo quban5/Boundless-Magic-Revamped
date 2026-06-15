@@ -591,7 +591,7 @@ Transform:
   m_GameObject: {fileID: 224481468}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.027, y: -0.05, z: 0}
+  m_LocalPosition: {x: 0.091, y: 0.025, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -868,7 +868,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.88221925, g: 0.4481132, b: 1, a: 0.20784314}
+      maxColor: {r: 0.54901963, g: 0.2509804, b: 0.5803922, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -11963,7 +11963,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1519581343
 Transform:
   m_ObjectHideFlags: 0
@@ -11972,13 +11972,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519581342}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.6660648, y: 0.04712132, z: -0.23739778, w: 0.705535}
-  m_LocalPosition: {x: -0.088, y: -0.21, z: 0}
+  m_LocalRotation: {x: -0.7062505, y: 0.7019424, z: -0.034788597, w: -0.085304864}
+  m_LocalPosition: {x: 0.303, y: 0.069, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2041779053}
-  m_LocalEulerAnglesHint: {x: -66.562, y: 74.204, z: -90}
+  m_LocalEulerAnglesHint: {x: 9.749, y: 184.109, z: -90}
 --- !u!82 &1519581344
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12164,7 +12164,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519581342}
   serializedVersion: 8
-  lengthInSec: 0.5
+  lengthInSec: 0.2
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -12292,7 +12292,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 15
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -12787,11 +12787,11 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 8
+    type: 10
     angle: 6.6
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 0
+    radiusThickness: 0.61
     donutRadius: 0.2
     m_Position: {x: 0, y: 1.29, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
@@ -12874,7 +12874,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.3
+      value: 0.87
       mode: 0
       spread: 0
       speed:
@@ -12993,7 +12993,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 80
+      scalar: 100
       minScalar: 10
       maxCurve:
         serializedVersion: 2
