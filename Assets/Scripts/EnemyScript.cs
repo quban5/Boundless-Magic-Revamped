@@ -2,14 +2,11 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    [SerializeField] int maxHealth;
-    [SerializeField] private int health;
     [SerializeField] private EnemyTypes enemyType;
-    [SerializeField] Sprite yellowSprite;
-    [SerializeField] Sprite redSprite;
-    [SerializeField] private Sprite greenSprite;
+    [SerializeField] private Sprite yellowSprite;
+    [SerializeField] private Sprite redSprite;
     [SerializeField] private Sprite blueSprite;
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer;
     public enum EnemyTypes
     {
         Red,
@@ -21,44 +18,41 @@ public class EnemyScript : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         GameManager.Instance.AddToEnemyList(gameObject);
-        health = maxHealth;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (health <= 0)
-        {
-            GameManager.Instance.EnemyKilled(enemyType);
-            Destroy(gameObject);
-        }
         float playerXPos = GameManager.Instance.GetPlayer().transform.position.x;
         if (playerXPos - 5 > transform.position.x)
         {
+            GameManager.Instance.RemoveFromEnemyList(gameObject);
             Destroy(gameObject);
         }
     }
 
-    public void GetHit()
+    public void DestroyEnemy()
     {
-        health--;
+        GameManager.Instance.EnemyKilled(enemyType);
+        GameManager.Instance.RemoveFromEnemyList(gameObject);
+        Destroy(gameObject);
     }
 
     public void SetEnemyType(EnemyTypes enemyType)
     {
         this.enemyType = enemyType;
 
-        if (enemyType == EnemyTypes.Red)
+        switch (enemyType)
         {
-            spriteRenderer.sprite = redSprite;
-        }
-        else if (enemyType == EnemyTypes.Yellow)
-        {
-            spriteRenderer.sprite = yellowSprite;
-        } 
-        else if (enemyType == EnemyTypes.Blue)
-        {
-            spriteRenderer.sprite = blueSprite; 
+            case EnemyTypes.Red:
+                spriteRenderer.sprite = redSprite;
+                break;
+            case EnemyTypes.Yellow:
+                spriteRenderer.sprite = yellowSprite;
+                break;
+            case EnemyTypes.Blue:
+                spriteRenderer.sprite = blueSprite;
+                break;
         }
     }
 }

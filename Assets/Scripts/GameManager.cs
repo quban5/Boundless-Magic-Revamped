@@ -251,6 +251,11 @@ public class GameManager : MonoBehaviour
         enemyList.Add(enemy);
     }
 
+    public void RemoveFromEnemyList(GameObject enemy)
+    {
+        enemyList.Remove(enemy);
+    }
+
     private void Curse()
     {
         foreach (GameObject enemy in enemyList)

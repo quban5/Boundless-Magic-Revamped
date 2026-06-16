@@ -28,7 +28,7 @@ public class ProjectileScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyScript enemy = collision.gameObject.GetComponent<EnemyScript>();
-            enemy.GetHit();
+            enemy.DestroyEnemy();
         }
 
         if (collision.gameObject.CompareTag("Obstacle") && projectileType == ProjectileTypes.Fireball)
