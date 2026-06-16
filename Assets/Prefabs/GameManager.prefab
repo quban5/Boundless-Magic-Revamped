@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerScript: {fileID: 0}
-  initialHorizontalSpeed: 4
-  horizontalSpeed: 4
+  initialHorizontalSpeed: 5
+  horizontalSpeed: 5
   speedIncrease: 0.05
   speedCaps:
   - requiredNumberOfChunkLoopIterations: 0
