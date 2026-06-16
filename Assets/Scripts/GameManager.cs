@@ -11,9 +11,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //Singleton pattern to ensure only one instance of GameManager exists
     public static GameManager Instance { get; private set; }
-
 
     private void Awake()
     {
@@ -35,7 +33,7 @@ public class GameManager : MonoBehaviour
     public static event Action<int,string> setActiveSpellTextEvent;
 
     [Header("Player")]
-    [SerializeField] private GameObject player;
+    [SerializeField] private PlayerScript playerScript;
     [Header("Movement Settings")]
     [SerializeField] public float initialHorizontalSpeed;
     public float horizontalSpeed;
@@ -104,6 +102,9 @@ public class GameManager : MonoBehaviour
     private List<List<RuneTypes>> activeSpells = new List<List<RuneTypes>>();
     private List<SpellTypes> activeSpellTypes = new List<SpellTypes>();
     private List<RuneTypes> spellCombo = new List<RuneTypes>();
+    private bool isMainScene;
+    private const string mainSceneName = "MainScene";
+    private const string titleScreenSceneName = "TitleScreen";
 
     public enum RuneTypes
     {
@@ -136,7 +137,7 @@ public class GameManager : MonoBehaviour
         activeSpellTypes.Add(SpellTypes.None);
         activeSpellTypes.Add(SpellTypes.None);
 
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainScene") && runeChanceThresholds.Count == 0)
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName(mainSceneName) && runeChanceThresholds.Count == 0)
         {
             GenerateSpellPool();
         }
@@ -153,23 +154,30 @@ public class GameManager : MonoBehaviour
             tempActiveSpellType = SpellTypes.None;
         }
 
-        int i = 0;
-
-        foreach (SpellTypes spellType in activeSpellTypes)
+        bool conflict = true;
+        while (conflict)
         {
-            if (i != spell)
+            conflict = false;
+            int i = 0;
+            foreach (SpellTypes spellType in activeSpellTypes)
             {
-                if (tempActiveSpellType == spellType && tempActiveSpellType != SpellTypes.None)
+                if (i != spell)
                 {
-                    tempActiveSpellType++;
-
-                    if (tempActiveSpellType > SpellTypes.TripleTrouble)
+                    if (tempActiveSpellType == spellType && tempActiveSpellType != SpellTypes.None)
                     {
-                        tempActiveSpellType = SpellTypes.None;
+                        tempActiveSpellType++;
+
+                        if (tempActiveSpellType > SpellTypes.TripleTrouble)
+                        {
+                            tempActiveSpellType = SpellTypes.None;
+                        }
+
+                        conflict = true;
+                        break;
                     }
                 }
+                i++;
             }
-            i++;
         }
 
         activeSpellTypes[spell] = tempActiveSpellType;
@@ -177,10 +185,24 @@ public class GameManager : MonoBehaviour
         setActiveSpellTextEvent?.Invoke(spell, activeSpellTypes[spell].ToString());
     }
 
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        isMainScene = scene.name == mainSceneName;
+    }
+
     void Update()
     {
-        //Restarting the game when the restart button is clicked
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainScene"))
+        if (isMainScene)
         {
             if (isMaxSpeedReached == false)
             {
@@ -194,6 +216,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
     public void CastSpell()
     {
         switch (currentCastableSpell)
@@ -221,7 +244,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
         spellCombo.Clear();
-        player.GetComponent<PlayerScript>().SetRuneSprites(spellCombo);
+        playerScript.SetRuneSprites(spellCombo);
     }
     public void AddToEnemyList(GameObject enemy)
     {
@@ -313,14 +336,19 @@ public class GameManager : MonoBehaviour
     }
 
     public void SetTimeSlowScale(float scale)
-{
-    timeSlowScale = scale;
-}
+    {
+        timeSlowScale = scale;
+    }
 
     //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
     {
         score += 10;
+
+        if (spellCombo.Count >= 3)
+        {
+            spellCombo.Clear();
+        }
 
         spellCombo.Add((RuneTypes)enemyType);
 
@@ -328,45 +356,41 @@ public class GameManager : MonoBehaviour
 
         foreach (List<RuneTypes> spell in activeSpells)
         {
-            if (spell.OrderBy(x => x).SequenceEqual(spellCombo.OrderBy(x => x)))
+            if (spell.SequenceEqual(spellCombo.OrderBy(x => x)))
             {
                 currentCastableSpell = activeSpellTypes[i];
             }
             i++;
         }
 
-        if (spellCombo.Count > 3)
-        {
-            spellCombo.Clear();
-        }
-
-        player.GetComponent<PlayerScript>().SetRuneSprites(spellCombo);
+        playerScript.SetRuneSprites(spellCombo);
     }
     public float GetScore()
     {
         return score;
     }
-    public void SetPlayer(GameObject player)
+    public void SetPlayer(PlayerScript playerScript)
     {
-        this.player = player;
+        this.playerScript = playerScript;
     }
-    public GameObject GetPlayer()
+    public PlayerScript GetPlayer()
     {
-        return player;
+        return playerScript;
     }
     public void GenerateSpellPool()
     {
         spellPool.Clear();
-        spellPool.Add(new List<RuneTypes>() { RuneTypes.Blue, RuneTypes.Red, RuneTypes.Yellow });
+
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Yellow, RuneTypes.Blue });
         spellPool.Add(new List<RuneTypes>() { RuneTypes.Blue, RuneTypes.Blue, RuneTypes.Blue });
         spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Blue, RuneTypes.Blue });
         spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Red, RuneTypes.Red });
-        spellPool.Add(new List<RuneTypes>() { RuneTypes.Yellow, RuneTypes.Red, RuneTypes.Yellow });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Yellow, RuneTypes.Yellow });
         spellPool.Add(new List<RuneTypes>() { RuneTypes.Yellow, RuneTypes.Yellow, RuneTypes.Yellow });
         spellPool.Add(new List<RuneTypes>() { RuneTypes.Yellow, RuneTypes.Blue, RuneTypes.Blue });
         spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Red, RuneTypes.Yellow });
         spellPool.Add(new List<RuneTypes>() { RuneTypes.Red, RuneTypes.Red, RuneTypes.Blue });
-        spellPool.Add(new List<RuneTypes>() { RuneTypes.Blue, RuneTypes.Yellow, RuneTypes.Yellow });
+        spellPool.Add(new List<RuneTypes>() { RuneTypes.Yellow, RuneTypes.Yellow, RuneTypes.Blue });
 
         Debug.Log("Spell Pool Generated:");
         for (int i = 0; i < 10; i++)
@@ -439,7 +463,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene(mainSceneName);
         horizontalSpeed = initialHorizontalSpeed;
     }
 
@@ -457,7 +481,7 @@ public class GameManager : MonoBehaviour
         enemyList.Clear();
         obstacleList.Clear();
         spellCombo.Clear();
-        SceneManager.LoadScene("TitleScreen");
+        SceneManager.LoadScene(titleScreenSceneName);
     }
 
 }

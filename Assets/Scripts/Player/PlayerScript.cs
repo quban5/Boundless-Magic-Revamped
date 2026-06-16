@@ -55,7 +55,7 @@ public class PlayerScript : MonoBehaviour
         GameManager.timeslowEvent += ActivateTimeSlow;
         GameManager.shieldEvent += ActivateShield;
         GameManager.swordEvent += ActivateSword;
-        GameManager.Instance.SetPlayer(gameObject);
+        GameManager.Instance.SetPlayer(this);
         dead = false;
         yellowColor = new Color(0.98f, 0.95f, 0.21f, 0.16f);
         redColor = new Color(0.67f, 0.2f, 0.2f, 0.16f);
@@ -242,9 +242,6 @@ public class PlayerScript : MonoBehaviour
             GameManager.Instance.SpawnChunk();
         }
     }
-
-
-
     private void Die()
     {
         dead = true;
