@@ -111,21 +111,27 @@ public class SpellManager : MonoBehaviour
         {
             case SpellTypes.Invulnerability:
                 invincibilityEvent?.Invoke();
+                GameManager.Instance.AddScore(10);
                 break;
             case SpellTypes.Fireball:
                 fireballEvent?.Invoke();
+                GameManager.Instance.AddScore(10);
                 break;
             case SpellTypes.TimeSlow:
                 timeslowEvent?.Invoke();
+                GameManager.Instance.AddScore(10);
                 break;
             case SpellTypes.Shield:
                 shieldEvent?.Invoke();
+                GameManager.Instance.AddScore(10);
                 break;
             case SpellTypes.Curse:
                 curseEvent?.Invoke();
+                GameManager.Instance.AddScore(10);
                 break;
             case SpellTypes.Sword:
                 swordEvent?.Invoke();
+                GameManager.Instance.AddScore(10);
                 break;
             case SpellTypes.TripleTrouble:
                 //Implement triple trouble spell
@@ -223,7 +229,7 @@ public class SpellManager : MonoBehaviour
     //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
     public void EnemyKilled(EnemyScript.EnemyTypes enemyType)
     {
-        GameManager.Instance.AddScore(10);
+        GameManager.Instance.AddScore(2);
 
         if (spellCombo.Count >= 3)
         {

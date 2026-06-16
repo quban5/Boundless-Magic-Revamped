@@ -210,11 +210,13 @@ public class PlayerScript : MonoBehaviour
                 if (swordActive)
                 {
                     enemyScript?.DestroyEnemy();
+                    GameManager.Instance.AddScore(2);
                 }
                 else if (shieldActive)
                 {
                     DeactivateShield();
                     enemyScript?.DestroyEnemy();
+                    GameManager.Instance.AddScore(2);
                 }
                 else
                 {
@@ -229,11 +231,13 @@ public class PlayerScript : MonoBehaviour
                 if (shieldActive)
                 {
                     Destroy(collision.gameObject);
+                    GameManager.Instance.AddScore(1);
                 }
                 else if (swordActive)
                 {
                     DeactivateSword();
                     Destroy(collision.gameObject);
+                    GameManager.Instance.AddScore(1);
                 }
                 else
                 {

@@ -34,6 +34,7 @@ public class ProjectileScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Obstacle") && projectileType == ProjectileTypes.Fireball)
         {
             Destroy(collision.gameObject);
+            GameManager.Instance.AddScore(1);
         }
 
         if (!collision.gameObject.CompareTag("Player") && projectileType != ProjectileTypes.Fireball)

@@ -6726,12 +6726,12 @@ MonoBehaviour:
   - 6.17
   projectilePrefab: {fileID: 5840548823809149866, guid: 2f09894469711aa4abdd24e470700b88, type: 3}
   fireballPrefab: {fileID: 6968994161513268655, guid: dfda97f7cd3469242a44698d217c9d18, type: 3}
-  invincibilityDuration: 5
+  invincibilityDuration: 6
   runeSprites:
   - {fileID: 1757351768}
   - {fileID: 1332283545}
   - {fileID: 1346838186}
-  timeSlowDuration: 5
+  timeSlowDuration: 6
   timeSlowMinScale: 0.25
   shield: {fileID: 1164617679}
   sword: {fileID: 1295154884}
