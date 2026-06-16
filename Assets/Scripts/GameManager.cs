@@ -82,9 +82,8 @@ public class GameManager : MonoBehaviour
     private int numberOfChunkLoopIterations;
     bool isFirstChunkToSpawn = true;
 
-    [Header("Enemies & Obstacles")]
+    [Header("Enemies")]
     [SerializeField] private List<GameObject> enemyList = new List<GameObject>();
-    [SerializeField] private List<GameObject> obstacleList = new List<GameObject>();
 
     [Header("Score")]
     [SerializeField] private float score;
@@ -484,7 +483,6 @@ public class GameManager : MonoBehaviour
         isMaxSpeedReached = false;
         spawnedChunks.Clear();
         enemyList.Clear();
-        obstacleList.Clear();
         spellCombo.Clear();
         SceneManager.LoadScene(titleScreenSceneName);
     }

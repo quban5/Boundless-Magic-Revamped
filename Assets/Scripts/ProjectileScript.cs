@@ -20,7 +20,7 @@ public class ProjectileScript : MonoBehaviour
 
     void Update()
     {
-        transform.position = transform.position + new Vector3(speed, 0, 0) * Time.deltaTime;
+        transform.Translate(speed * Time.deltaTime, 0, 0);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -48,7 +48,7 @@ public class ProjectileScript : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void addSpeed(float speed)
+    public void AddSpeed(float speed)
     {
         this.speed += speed;
     }

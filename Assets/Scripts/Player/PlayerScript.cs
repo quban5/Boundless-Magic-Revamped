@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,28 +6,34 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
     //Components
-    private Rigidbody2D rb;
-    [SerializeField] private SpriteRenderer renderer;
-    [SerializeField] private GameObject projectilePrefab;
+    private SpriteRenderer renderer;
+
+    [Header("Movement")]
     [SerializeField] private float verticalSpeed;
-    [SerializeField] private float speedIncrease;
     [SerializeField] private float[] layerPositionValues;
-    [SerializeField] private bool dead;
-    [SerializeField] private bool invincible;
-    [SerializeField] private float invincibilityDuration;
-    [SerializeField] private SpriteRenderer[] runeSprites;
-    [SerializeField] private GameObject runeHolder;
+
+    [Header("Projectiles")]
+    [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private GameObject fireballPrefab;
 
+    [Header("Invincibility")]
+    [SerializeField] private float invincibilityDuration;
+
+    [Header("Runes")]
+    [SerializeField] private SpriteRenderer[] runeSprites;
+
     [Header("Powerups")]
-    private bool timeSlowActivated;
     [SerializeField] private float timeSlowDuration;
     [SerializeField] private float timeSlowMinScale;
-    private float timeSlowScale = 1;
-    private float timeSlowTimer;
     [SerializeField] private GameObject shield;
-    private bool shieldActive;
     [SerializeField] private GameObject sword;
+
+    //Runtime state
+    private bool dead;
+    private bool invincible;
+    private bool timeSlowActivated;
+    private float timeSlowTimer;
+    private bool shieldActive;
     private bool swordActive;
     private Color yellowColor;
     private Color redColor;
@@ -49,7 +54,6 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         layerPosition = layerPositions.UpMiddle;
-        rb = GetComponent<Rigidbody2D>();
         GameManager.invincibilityEvent += StartInvincibility;
         GameManager.fireballEvent += SpawnFireball;
         GameManager.timeslowEvent += ActivateTimeSlow;
@@ -82,7 +86,6 @@ public class PlayerScript : MonoBehaviour
     public void ActivateTimeSlow()
     {
         timeSlowActivated = true;
-        timeSlowScale = timeSlowMinScale;
         timeSlowTimer = timeSlowDuration;
     }
 
@@ -159,7 +162,7 @@ public class PlayerScript : MonoBehaviour
         Vector3 currentPos = transform.position;
         float targetYPos = layerPositionValues[(int)layerPosition];
         float lerpedYPos = Mathf.Lerp(currentPos.y, targetYPos, verticalSpeed * Time.deltaTime);
-        transform.position = new Vector3(currentPos.x, lerpedYPos);
+        transform.position = new Vector3(currentPos.x, lerpedYPos, currentPos.z);
 
         if (layerPosition == layerPositions.OutOfBoundsBottom)
         {
@@ -186,13 +189,13 @@ public class PlayerScript : MonoBehaviour
         {
             GameObject newBullet = Instantiate(projectilePrefab, transform.position, transform.rotation);
             ProjectileScript projectileScript = newBullet.GetComponent<ProjectileScript>();
-            projectileScript.addSpeed(GameManager.Instance.horizontalSpeed + 5f);
+            projectileScript.AddSpeed(GameManager.Instance.horizontalSpeed + 5f);
         }
     }
 
     public void SpawnFireball()
     {
-        Instantiate(fireballPrefab, transform.position + new Vector3(1, 0, 0), Quaternion.identity);
+        Instantiate(fireballPrefab, transform.position + Vector3.right, Quaternion.identity);
     }
 
     private Coroutine invincibilityCoroutine;
@@ -201,16 +204,17 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            EnemyScript enemyScript = collision.gameObject.GetComponent<EnemyScript>();
             if (!invincible)
             {
                 if (swordActive)
                 {
-                    Destroy(collision.gameObject);
-                } 
+                    enemyScript?.DestroyEnemy();
+                }
                 else if (shieldActive)
                 {
                     DeactivateShield();
-                    Destroy(collision.gameObject);
+                    enemyScript?.DestroyEnemy();
                 }
                 else
                 {
@@ -225,13 +229,13 @@ public class PlayerScript : MonoBehaviour
                 if (shieldActive)
                 {
                     Destroy(collision.gameObject);
-                } 
-                else if (swordActive) 
+                }
+                else if (swordActive)
                 {
                     DeactivateSword();
                     Destroy(collision.gameObject);
-                } 
-                else 
+                }
+                else
                 {
                     Die();
                 }
@@ -242,6 +246,16 @@ public class PlayerScript : MonoBehaviour
             GameManager.Instance.SpawnChunk();
         }
     }
+
+    private void OnDestroy()
+    {
+        GameManager.invincibilityEvent -= StartInvincibility;
+        GameManager.fireballEvent -= SpawnFireball;
+        GameManager.timeslowEvent -= ActivateTimeSlow;
+        GameManager.shieldEvent -= ActivateShield;
+        GameManager.swordEvent -= ActivateSword;
+    }
+
     private void Die()
     {
         dead = true;

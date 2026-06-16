@@ -6,7 +6,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private Sprite yellowSprite;
     [SerializeField] private Sprite redSprite;
     [SerializeField] private Sprite blueSprite;
-    private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     public enum EnemyTypes
     {
         Red,
@@ -16,7 +16,6 @@ public class EnemyScript : MonoBehaviour
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         GameManager.Instance.AddToEnemyList(gameObject);
     }
 

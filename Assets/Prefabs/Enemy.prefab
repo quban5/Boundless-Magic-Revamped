@@ -200,12 +200,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 446e3b53aed21bf4d9c8833edbadddf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyScript
-  maxHealth: 1
-  health: 0
   enemyType: 0
   yellowSprite: {fileID: 21300000, guid: 672b23cb3a9629b478f48d737a342b8d, type: 3}
   redSprite: {fileID: 21300000, guid: 38f788fc169a4c84fba65e8fb04ddb32, type: 3}
-  greenSprite: {fileID: 21300000, guid: a5168b105f64b0c4683aed6b4a383257, type: 3}
   blueSprite: {fileID: 21300000, guid: 1f99f63fb8bfea14198693f386dd507f, type: 3}
   spriteRenderer: {fileID: 544391589114945159}
 --- !u!50 &2264937554912360533
