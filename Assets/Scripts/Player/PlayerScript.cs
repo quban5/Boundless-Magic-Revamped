@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
     //Components
-    private new SpriteRenderer renderer;
+    private SpriteRenderer spriteRenderer;
 
     [Header("Movement")]
     [SerializeField] private float verticalSpeed;
@@ -275,7 +275,7 @@ public class PlayerScript : MonoBehaviour
     IEnumerator InvincibilityTimer()
     {
         invincible = true;
-        renderer.color = Color.gray;
+        spriteRenderer.color = Color.gray;
 
         float warningDuration = 2f;
         float blinkInterval = 0.2f; 
@@ -290,10 +290,10 @@ public class PlayerScript : MonoBehaviour
         while (elapsed < warningDuration)
         {
          
-            if (renderer.color == Color.gray)
-                renderer.color = Color.white;
+            if (spriteRenderer.color == Color.gray)
+                spriteRenderer.color = Color.white;
             else
-                renderer.color = Color.gray;
+                spriteRenderer.color = Color.gray;
 
             yield return new WaitForSeconds(blinkInterval);
             elapsed += blinkInterval;
@@ -301,7 +301,7 @@ public class PlayerScript : MonoBehaviour
 
         
         invincible = false;
-        renderer.color = Color.white;
+        spriteRenderer.color = Color.white;
         invincibilityCoroutine = null;
     }
 
