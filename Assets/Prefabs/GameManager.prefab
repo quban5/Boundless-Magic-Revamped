@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7761374521394925329}
   - component: {fileID: 3230979066575609027}
   - component: {fileID: 8764255228637686779}
+  - component: {fileID: 1327495247986121059}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -47,8 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerScript: {fileID: 0}
   initialHorizontalSpeed: 4
-  horizontalSpeed: 3
-  speedIncrease: 0.1
+  horizontalSpeed: 4
+  speedIncrease: 0.05
   speedCaps:
   - requiredNumberOfChunkLoopIterations: 0
     targetSpeedCap: 6
@@ -63,6 +64,33 @@ MonoBehaviour:
   - requiredNumberOfChunkLoopIterations: 8
     targetSpeedCap: 15
   maxSpeedLimit: 15
+  enemyList: []
+  score: 0
+--- !u!114 &8764255228637686779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3215168144079186006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91c917ea3a403fa40b15ee2826cedab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpellManager
+  currentCastableSpell: 0
+--- !u!114 &1327495247986121059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3215168144079186006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c54fe18c9d4c0b428ae8fc0b639e300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChunkManager
   easyChunkList:
   - {fileID: 526171442341463024, guid: 9b9a2e18ea927f347b220c88ef4c2862, type: 3}
   - {fileID: 526171442341463024, guid: 66259aa882f0fe1418ff9c0c981c8485, type: 3}
@@ -81,20 +109,5 @@ MonoBehaviour:
   rewardChunkList:
   - {fileID: 526171442341463024, guid: d621c89a3cbb60c46bec925409288ee0, type: 3}
   chunkLoopOrder: 000000000100000002000000030000000100000002000000000000000100000002000000
-  chunkSpawnPos: {x: 9, y: 0, z: 0}
+  chunkSpawnPos: {x: 8.36, y: 0, z: 0}
   spawnedChunks: []
-  enemyList: []
-  score: 0
---- !u!114 &8764255228637686779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3215168144079186006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91c917ea3a403fa40b15ee2826cedab7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpellManager
-  currentCastableSpell: 0

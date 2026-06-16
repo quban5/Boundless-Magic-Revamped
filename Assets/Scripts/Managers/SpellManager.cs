@@ -131,6 +131,7 @@ public class SpellManager : MonoBehaviour
                 //Implement triple trouble spell
                 break;
         }
+        currentCastableSpell = SpellTypes.None;
         spellCombo.Clear();
         GameManager.Instance.GetPlayer().SetRuneSprites(spellCombo);
     }

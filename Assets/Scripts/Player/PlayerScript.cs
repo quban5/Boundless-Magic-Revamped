@@ -243,7 +243,7 @@ public class PlayerScript : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("SpawnChunkTrigger"))
         {
-            GameManager.Instance.SpawnChunk();
+            ChunkManager.Instance.SpawnChunk();
         }
     }
 
