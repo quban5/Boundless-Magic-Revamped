@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
     //Components
-    private SpriteRenderer renderer;
+    private new SpriteRenderer renderer;
 
     [Header("Movement")]
     [SerializeField] private float verticalSpeed;
@@ -54,11 +54,11 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         layerPosition = layerPositions.UpMiddle;
-        GameManager.invincibilityEvent += StartInvincibility;
-        GameManager.fireballEvent += SpawnFireball;
-        GameManager.timeslowEvent += ActivateTimeSlow;
-        GameManager.shieldEvent += ActivateShield;
-        GameManager.swordEvent += ActivateSword;
+        SpellManager.invincibilityEvent += StartInvincibility;
+        SpellManager.fireballEvent += SpawnFireball;
+        SpellManager.timeslowEvent += ActivateTimeSlow;
+        SpellManager.shieldEvent += ActivateShield;
+        SpellManager.swordEvent += ActivateSword;
         GameManager.Instance.SetPlayer(this);
         dead = false;
         yellowColor = new Color(0.98f, 0.95f, 0.21f, 0.16f);
@@ -249,11 +249,11 @@ public class PlayerScript : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.invincibilityEvent -= StartInvincibility;
-        GameManager.fireballEvent -= SpawnFireball;
-        GameManager.timeslowEvent -= ActivateTimeSlow;
-        GameManager.shieldEvent -= ActivateShield;
-        GameManager.swordEvent -= ActivateSword;
+        SpellManager.invincibilityEvent -= StartInvincibility;
+        SpellManager.fireballEvent -= SpawnFireball;
+        SpellManager.timeslowEvent -= ActivateTimeSlow;
+        SpellManager.shieldEvent -= ActivateShield;
+        SpellManager.swordEvent -= ActivateSword;
     }
 
     private void Die()

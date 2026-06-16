@@ -29,7 +29,7 @@ public class PlayerInputManager : MonoBehaviour
     {
         if (actions.Player.Magic.WasPressedThisFrame())
         {
-            GameManager.Instance.CastSpell();
+            SpellManager.Instance.CastSpell();
         }
     }
 

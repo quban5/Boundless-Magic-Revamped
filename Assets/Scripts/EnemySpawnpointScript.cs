@@ -13,7 +13,7 @@ public class EnemySpawnpointScript : MonoBehaviour
     void Start()
     {
         player = Instance.GetPlayer().gameObject;
-        runeChanceThresholds = Instance.GetRuneChanceThresholds();
+        runeChanceThresholds = SpellManager.Instance.GetRuneChanceThresholds();
     }
 
     void Update()

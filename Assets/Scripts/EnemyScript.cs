@@ -32,7 +32,7 @@ public class EnemyScript : MonoBehaviour
 
     public void DestroyEnemy()
     {
-        GameManager.Instance.EnemyKilled(enemyType);
+        SpellManager.Instance.EnemyKilled(enemyType);
         GameManager.Instance.RemoveFromEnemyList(gameObject);
         Destroy(gameObject);
     }

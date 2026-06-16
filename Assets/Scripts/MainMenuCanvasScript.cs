@@ -23,8 +23,8 @@ public class MainMenuCanvasScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        activeSpellChangedEvent += Instance.ChangeActiveSpell;
-        setActiveSpellTextEvent += SetActiveSpellText;
+        activeSpellChangedEvent += SpellManager.Instance.ChangeActiveSpell;
+        SpellManager.setActiveSpellTextEvent += SetActiveSpellText;
         // Initialize the spellInfo array with the serialized GameObjects
         spellInfo = new GameObject[3][];
         spellInfo[0] = spell1Info;
@@ -44,8 +44,8 @@ public class MainMenuCanvasScript : MonoBehaviour
 
     public void RandomizeSpells()
     {
-        GameManager.Instance.GenerateSpellPool();
-        activeSpells = GameManager.Instance.GetActiveSpells();
+        SpellManager.Instance.GenerateSpellPool();
+        activeSpells = SpellManager.Instance.GetActiveSpells();
 
         int spellIndex = 0;
         int runeIndex = 0;

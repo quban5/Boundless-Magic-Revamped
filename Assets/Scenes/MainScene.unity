@@ -6716,10 +6716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d9d61211f43d9548b7c3238e84a4c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerScript
-  renderer: {fileID: 1174627936}
-  projectilePrefab: {fileID: 5840548823809149866, guid: 2f09894469711aa4abdd24e470700b88, type: 3}
   verticalSpeed: 15
-  speedIncrease: 0.1
   layerPositionValues:
   - 3.397
   - 0.99
@@ -6727,15 +6724,13 @@ MonoBehaviour:
   - -3.93
   - -5.98
   - 6.17
-  dead: 0
-  invincible: 0
+  projectilePrefab: {fileID: 5840548823809149866, guid: 2f09894469711aa4abdd24e470700b88, type: 3}
+  fireballPrefab: {fileID: 6968994161513268655, guid: dfda97f7cd3469242a44698d217c9d18, type: 3}
   invincibilityDuration: 5
   runeSprites:
   - {fileID: 1757351768}
   - {fileID: 1332283545}
   - {fileID: 1346838186}
-  runeHolder: {fileID: 2041779052}
-  fireballPrefab: {fileID: 6968994161513268655, guid: dfda97f7cd3469242a44698d217c9d18, type: 3}
   timeSlowDuration: 5
   timeSlowMinScale: 0.25
   shield: {fileID: 1164617679}
@@ -17578,26 +17573,6 @@ PrefabInstance:
     - target: {fileID: 3215168144079186006, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
       propertyPath: m_Name
       value: GameManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 3230979066575609027, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
-      propertyPath: ground
-      value: 
-      objectReference: {fileID: 1899911384}
-    - target: {fileID: 3230979066575609027, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
-      propertyPath: chunkEntry
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3230979066575609027, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
-      propertyPath: speedIncrease
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3230979066575609027, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
-      propertyPath: chunkSpawnPos.x
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3230979066575609027, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
-      propertyPath: horizontalSpeed
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7761374521394925329, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
       propertyPath: m_LocalPosition.x
