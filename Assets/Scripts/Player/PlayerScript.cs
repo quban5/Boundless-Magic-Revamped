@@ -332,7 +332,7 @@ public class PlayerScript : MonoBehaviour
         invincibilityCoroutine = null;
     }
 
-    public void SetRuneSprites(List<GameManager.RuneTypes> runes)
+    public void SetRuneSprites(List<SpellManager.RuneTypes> runes)
     {
         int i = 0;
         foreach (SpriteRenderer runeSprite in runeSprites)
@@ -341,13 +341,13 @@ public class PlayerScript : MonoBehaviour
             {
                 switch (runes[i])
                 {
-                    case GameManager.RuneTypes.Red:
+                    case SpellManager.RuneTypes.Red:
                         runeSprite.color = redColor;
                         break;
-                    case GameManager.RuneTypes.Yellow:
+                    case SpellManager.RuneTypes.Yellow:
                         runeSprite.color = yellowColor;
                         break;
-                    case GameManager.RuneTypes.Blue:
+                    case SpellManager.RuneTypes.Blue:
                         runeSprite.color = blueColor;
                         break;
                 }

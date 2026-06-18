@@ -52,24 +52,6 @@ public class GameManager : MonoBehaviour
         public const string titleScreen = "TitleScreen";
     }
 
-    public enum RuneTypes
-    {
-        Red = 0,
-        Yellow = 1,
-        Blue = 2
-    }
-    public enum SpellTypes
-    {
-        None = 0,
-        Invulnerability = 1,
-        Fireball = 2,
-        TimeSlow = 3,
-        Shield = 4,
-        Curse = 5,
-        Sword = 6,
-        TripleTrouble = 7,
-    }
-
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;

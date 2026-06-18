@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static GameManager;
 
 public class EnemySpawnpointScript : MonoBehaviour
 {
@@ -8,11 +7,11 @@ public class EnemySpawnpointScript : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private float distanceToSpawn = 8.5f;
     private float playerDistance;
-    private Dictionary<RuneTypes, float> runeChanceThresholds;
+    private Dictionary<SpellManager.RuneTypes, float> runeChanceThresholds;
 
     void Start()
     {
-        player = Instance.GetPlayer().gameObject;
+        player = GameManager.Instance.GetPlayer().gameObject;
         runeChanceThresholds = SpellManager.Instance.GetRuneChanceThresholds();
     }
 
@@ -41,9 +40,9 @@ public class EnemySpawnpointScript : MonoBehaviour
         EnemyScript enemyScript = spawnedEnemy.GetComponent<EnemyScript>();
         float randomEnemyType = Random.Range(0f, 1f);
 
-        if (randomEnemyType <= runeChanceThresholds[RuneTypes.Red]) {
+        if (randomEnemyType <= runeChanceThresholds[SpellManager.RuneTypes.Red]) {
             enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Red);
-        } else if (randomEnemyType <= runeChanceThresholds[RuneTypes.Yellow]) {
+        } else if (randomEnemyType <= runeChanceThresholds[SpellManager.RuneTypes.Yellow]) {
             enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Yellow);
         } else {
             enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Blue);

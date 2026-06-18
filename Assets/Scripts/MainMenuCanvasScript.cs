@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static GameManager;
+using static SpellManager;
 using TMPro;
 using System;
 

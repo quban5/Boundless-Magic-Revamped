@@ -41,6 +41,24 @@ public class SpellManager : MonoBehaviour
     private List<SpellTypes> activeSpellTypes = new List<SpellTypes>();
     private List<RuneTypes> spellCombo = new List<RuneTypes>();
 
+    public enum RuneTypes
+    {
+        Red = 0,
+        Yellow = 1,
+        Blue = 2
+    }
+    public enum SpellTypes
+    {
+        None = 0,
+        Invulnerability = 1,
+        Fireball = 2,
+        TimeSlow = 3,
+        Shield = 4,
+        Curse = 5,
+        Sword = 6,
+        TripleTrouble = 7,
+    }
+
     private void Start()
     {
         GameManager.gameOverEvent += spellCombo.Clear;
@@ -224,6 +242,10 @@ public class SpellManager : MonoBehaviour
     public List<List<RuneTypes>> GetActiveSpells()
     {
         return activeSpells;
+    }
+    public List<SpellTypes> GetActiveSpellTypes()
+    {
+        return activeSpellTypes;
     }
 
     //Method for when an enemy is killed, increasing the score and combo count and giving the appropriate bonus if the combo limit is reached
