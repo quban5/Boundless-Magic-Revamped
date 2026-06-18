@@ -29,6 +29,8 @@ public class SpellManager : MonoBehaviour
     public static event Action curseEvent;
     public static event Action<int, string> setActiveSpellTextEvent;
     public static event Action<List<RuneTypes>> onRunesChanged;
+    public static event Action<SpellTypes> onSpellReadyToCast;
+    public static event Action spellCastedEvent;
 
     [Header("Runes & Spells")]
     [SerializeField] private SpellTypes currentCastableSpell;
@@ -159,6 +161,7 @@ public class SpellManager : MonoBehaviour
         currentCastableSpell = SpellTypes.None;
         spellCombo.Clear();
         onRunesChanged?.Invoke(spellCombo);
+        spellCastedEvent?.Invoke();
     }
 
     public void GenerateSpellPool()
@@ -268,6 +271,7 @@ public class SpellManager : MonoBehaviour
             if (spell.SequenceEqual(spellCombo.OrderBy(x => x)))
             {
                 currentCastableSpell = activeSpellTypes[i];
+                onSpellReadyToCast?.Invoke(currentCastableSpell);
             }
             i++;
         }
