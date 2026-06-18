@@ -27,6 +27,10 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float timeSlowMinScale;
     [SerializeField] private GameObject shield;
     [SerializeField] private GameObject sword;
+    [SerializeField] private float shieldLifetime;
+    [SerializeField] private float swordLifetime;
+    private IEnumerator shieldTimer;
+    private IEnumerator swordTimer;
 
     //Runtime state
     private bool dead;
@@ -69,6 +73,9 @@ public class PlayerScript : MonoBehaviour
         {
             rune.gameObject.SetActive(false);
         }
+
+        shieldTimer = ShieldTimer();
+        swordTimer = SwordTimer();
     }
 
     void Update()
@@ -110,16 +117,32 @@ public class PlayerScript : MonoBehaviour
 
     public void ActivateShield()
     {
+        StopCoroutine(shieldTimer);
         DeactivateSword();
         shield.SetActive(true);
         shieldActive = true;
+        StartCoroutine(shieldTimer);
+    }
+
+    private IEnumerator ShieldTimer()
+    {
+        yield return new WaitForSeconds(shieldLifetime);
+        DeactivateShield();
     }
 
     public void ActivateSword()
     {
+        StopCoroutine(swordTimer);
         DeactivateShield();
         sword.SetActive(true);
         swordActive = true;
+        StartCoroutine(swordTimer);
+    }
+
+    private IEnumerator SwordTimer()
+    {
+        yield return new WaitForSeconds(swordLifetime);
+        DeactivateSword();
     }
 
     private void DeactivateShield()

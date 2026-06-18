@@ -6736,6 +6736,8 @@ MonoBehaviour:
   timeSlowMinScale: 0.25
   shield: {fileID: 1164617679}
   sword: {fileID: 1295154884}
+  shieldLifetime: 10
+  swordLifetime: 10
 --- !u!50 &1174627939
 Rigidbody2D:
   serializedVersion: 5
