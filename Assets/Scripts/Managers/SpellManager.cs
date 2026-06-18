@@ -34,6 +34,7 @@ public class SpellManager : MonoBehaviour
 
     [Header("Runes & Spells")]
     [SerializeField] private SpellTypes currentCastableSpell;
+    [SerializeField] private int minimumRuneTypesInPool;
 
     //Dictionaries and lists
     private Dictionary<RuneTypes, float> runeChances = new Dictionary<RuneTypes, float>();
@@ -220,6 +221,12 @@ public class SpellManager : MonoBehaviour
         for (int i = 0; i < runeChances.Count; i++)
         {
             RuneTypes runeType = (RuneTypes)i;
+
+            if (runeChances[runeType] == 0)
+            {
+                runeChances[runeType] = minimumRuneTypesInPool;
+            }
+
             float chance = (runeChances[runeType] / totalRuneCount);
             runeChances[runeType] = chance;
             Debug.Log(runeType.ToString() + " Chance: " + chance.ToString("F2"));

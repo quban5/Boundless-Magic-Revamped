@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpellManager
   currentCastableSpell: 0
+  minimumRuneTypesInPool: 1
 --- !u!114 &1327495247986121059
 MonoBehaviour:
   m_ObjectHideFlags: 0
