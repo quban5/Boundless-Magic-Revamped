@@ -266,6 +266,8 @@ public class SpellManager : MonoBehaviour
 
         int i = 0;
 
+        onRunesChanged?.Invoke(spellCombo);
+
         foreach (List<RuneTypes> spell in activeSpells)
         {
             if (spell.SequenceEqual(spellCombo.OrderBy(x => x)))
@@ -275,8 +277,6 @@ public class SpellManager : MonoBehaviour
             }
             i++;
         }
-
-        onRunesChanged?.Invoke(spellCombo);
     }
 
     private void OnDestroy()

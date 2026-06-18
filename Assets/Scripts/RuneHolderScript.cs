@@ -21,6 +21,10 @@ public class RuneHolderScript : MonoBehaviour
     [SerializeField] private Sprite swordSpellIcon;
     [SerializeField] private Sprite curseSpellIcon;
 
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem successParticles;
+    [SerializeField] private ParticleSystem failureParticles;
+
 
     void Start()
     {
@@ -79,6 +83,12 @@ public class RuneHolderScript : MonoBehaviour
     public void SetSpellIcon(SpellManager.SpellTypes spellType)
     {
         spellIconRenderer.gameObject.SetActive(true);
+
+        foreach (SpriteRenderer rune in runeSprites)
+        {
+            rune.gameObject.SetActive(false);
+        }
+
         switch (spellType)
         {
             case SpellManager.SpellTypes.Fireball:
@@ -104,6 +114,13 @@ public class RuneHolderScript : MonoBehaviour
 
     public void ClearSpellIcon()
     {
+        if (spellIconRenderer.gameObject.activeSelf) 
+        {
+            successParticles.Play();
+        } else
+        {
+            failureParticles.Play();
+        }
         spellIconRenderer.gameObject.SetActive(false);
     }
 

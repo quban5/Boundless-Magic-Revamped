@@ -768,7 +768,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &224481469
 Transform:
   m_ObjectHideFlags: 0
@@ -882,7 +882,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -12900,7 +12900,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1519581343
 Transform:
   m_ObjectHideFlags: 0
@@ -13110,7 +13110,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -18580,6 +18580,8 @@ MonoBehaviour:
   shieldSpellIcon: {fileID: 6137983720975306069, guid: a230995b89084604c96297a677650671, type: 3}
   swordSpellIcon: {fileID: -7375713104613394997, guid: 1c4cd30da3e427c4db233d85ac278854, type: 3}
   curseSpellIcon: {fileID: -6566568809514993109, guid: ae75adcd78bdf7a4ca0a5d73f0be6a2c, type: 3}
+  successParticles: {fileID: 224481471}
+  failureParticles: {fileID: 1519581346}
 --- !u!1 &2055185741
 GameObject:
   m_ObjectHideFlags: 0
