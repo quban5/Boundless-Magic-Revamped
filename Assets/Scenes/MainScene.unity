@@ -6716,6 +6716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d9d61211f43d9548b7c3238e84a4c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerScript
+  spriteRenderer: {fileID: 1174627936}
   verticalSpeed: 15
   layerPositionValues:
   - 3.397
