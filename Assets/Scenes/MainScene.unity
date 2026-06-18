@@ -7580,10 +7580,6 @@ MonoBehaviour:
   projectilePrefab: {fileID: 5840548823809149866, guid: 2f09894469711aa4abdd24e470700b88, type: 3}
   fireballPrefab: {fileID: 6968994161513268655, guid: dfda97f7cd3469242a44698d217c9d18, type: 3}
   invincibilityDuration: 6
-  runeSprites:
-  - {fileID: 1757351768}
-  - {fileID: 1332283545}
-  - {fileID: 1346838186}
   timeSlowDuration: 6
   timeSlowMinScale: 0.25
   shield: {fileID: 1164617679}
@@ -18441,6 +18437,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2041779053}
+  - component: {fileID: 2041779054}
   m_Layer: 0
   m_Name: RuneHolder
   m_TagString: Untagged
@@ -18468,6 +18465,22 @@ Transform:
   - {fileID: 1519581343}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 22.643}
+--- !u!114 &2041779054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2041779052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75875a8db17fec43ad2f683842557c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  runeSprites:
+  - {fileID: 1757351768}
+  - {fileID: 1332283545}
+  - {fileID: 1346838186}
 --- !u!1 &2055185741
 GameObject:
   m_ObjectHideFlags: 0

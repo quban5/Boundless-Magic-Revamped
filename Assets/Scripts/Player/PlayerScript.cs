@@ -19,9 +19,6 @@ public class PlayerScript : MonoBehaviour
     [Header("Invincibility")]
     [SerializeField] private float invincibilityDuration;
 
-    [Header("Runes")]
-    [SerializeField] private SpriteRenderer[] runeSprites;
-
     [Header("Powerups")]
     [SerializeField] private float timeSlowDuration;
     [SerializeField] private float timeSlowMinScale;
@@ -39,9 +36,6 @@ public class PlayerScript : MonoBehaviour
     private float timeSlowTimer;
     private bool shieldActive;
     private bool swordActive;
-    private Color yellowColor;
-    private Color redColor;
-    private Color blueColor;
 
     private enum layerPositions
     {
@@ -65,14 +59,6 @@ public class PlayerScript : MonoBehaviour
         SpellManager.swordEvent += ActivateSword;
         GameManager.Instance.SetPlayer(this);
         dead = false;
-        yellowColor = new Color(0.98f, 0.95f, 0.21f, 0.16f);
-        redColor = new Color(0.67f, 0.2f, 0.2f, 0.16f);
-        blueColor = new Color(0.39f, 0.61f, 1f, 0.16f);
-
-        foreach (SpriteRenderer rune in runeSprites)
-        {
-            rune.gameObject.SetActive(false);
-        }
 
         shieldTimer = ShieldTimer();
         swordTimer = SwordTimer();
@@ -330,34 +316,5 @@ public class PlayerScript : MonoBehaviour
         invincible = false;
         spriteRenderer.color = Color.white;
         invincibilityCoroutine = null;
-    }
-
-    public void SetRuneSprites(List<SpellManager.RuneTypes> runes)
-    {
-        int i = 0;
-        foreach (SpriteRenderer runeSprite in runeSprites)
-        {
-            if (runes.Count > i)
-            {
-                switch (runes[i])
-                {
-                    case SpellManager.RuneTypes.Red:
-                        runeSprite.color = redColor;
-                        break;
-                    case SpellManager.RuneTypes.Yellow:
-                        runeSprite.color = yellowColor;
-                        break;
-                    case SpellManager.RuneTypes.Blue:
-                        runeSprite.color = blueColor;
-                        break;
-                }
-                runeSprite.gameObject.SetActive(true);
-                i++;
-            }
-            else
-            {
-                runeSprite.gameObject.SetActive(false);
-            }
-        }
     }
 }

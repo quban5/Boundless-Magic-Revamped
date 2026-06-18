@@ -15,18 +15,23 @@ public class CanvasManager : MonoBehaviour
 
     void Start()
     {
-        List<SpellManager.SpellTypes> activeSpellTypes = SpellManager.Instance.GetActiveSpellTypes();
+        SetSpellNames(SpellManager.Instance.GetActiveSpellTypes());
+        SetSpellRuneColours(SpellManager.Instance.GetActiveSpells());
+    }
 
+    private void SetSpellNames(List<SpellManager.SpellTypes> activeSpellTypes)
+    {
         int i = 0;
         foreach (TMP_Text spellName in activeSpellNames)
         {
             spellName.text = activeSpellTypes[i].ToString();
             i++;
         }
+    }
 
-        List<List<SpellManager.RuneTypes>> activeSpells = SpellManager.Instance.GetActiveSpells();
-
-        i = 0;
+    private void SetSpellRuneColours(List<List<SpellManager.RuneTypes>> activeSpells)
+    {
+        int i = 0;
         foreach (List<SpellManager.RuneTypes> spell in activeSpells)
         {
             foreach (SpellManager.RuneTypes rune in spell)
