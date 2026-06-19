@@ -52,12 +52,14 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         layerPosition = layerPositions.UpMiddle;
+
         SpellManager.invincibilityEvent += StartInvincibility;
         SpellManager.fireballEvent += SpawnFireball;
         SpellManager.timeslowEvent += ActivateTimeSlow;
         SpellManager.shieldEvent += ActivateShield;
         SpellManager.swordEvent += ActivateSword;
         GameManager.Instance.SetPlayer(this);
+
         dead = false;
 
         shieldTimer = ShieldTimer();
@@ -71,8 +73,6 @@ public class PlayerScript : MonoBehaviour
             Movement();
             Shooting();
             CalculateTimeSlow();
-            //runeHolder.transform.RotateAround(runeHolder.transform.position, Vector3.forward, 360 * Time.deltaTime);
-
         }
     }
 
@@ -199,6 +199,7 @@ public class PlayerScript : MonoBehaviour
             GameObject newBullet = Instantiate(projectilePrefab, transform.position, transform.rotation);
             ProjectileScript projectileScript = newBullet.GetComponent<ProjectileScript>();
             projectileScript.AddSpeed(GameManager.Instance.horizontalSpeed + 5f);
+            AudioManager.Instance.playShootSound();
         }
     }
 

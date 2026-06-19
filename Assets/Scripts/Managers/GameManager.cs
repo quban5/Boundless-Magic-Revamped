@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
     public static event Action gameOverEvent;
+    public static event Action startRunEvent;
     [Header("Player")]
     [SerializeField] private PlayerScript playerScript;
     [Header("Movement Settings")]
@@ -71,6 +72,14 @@ public class GameManager : MonoBehaviour
     {
         SpellManager.curseEvent += Curse;
         ChunkManager.checkSpeedCapsEvent += CheckSpeedCaps;
+
+        if (isMainScene)
+        {
+            AudioManager.Instance.playMainTheme();
+        } else
+        {
+            AudioManager.Instance.playTitleTheme();
+        }
     }
 
     void Update()
@@ -170,6 +179,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene(SceneNames.main);
+        startRunEvent?.Invoke();
         horizontalSpeed = initialHorizontalSpeed;
     }
 

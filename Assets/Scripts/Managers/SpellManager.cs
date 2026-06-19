@@ -31,6 +31,8 @@ public class SpellManager : MonoBehaviour
     public static event Action<List<RuneTypes>> onRunesChanged;
     public static event Action<SpellTypes> onSpellReadyToCast;
     public static event Action spellCastedEvent;
+    public static event Action spellSuccessEvent;
+    public static event Action spellFailureEvent;
 
     [Header("Runes & Spells")]
     [SerializeField] private SpellTypes currentCastableSpell;
@@ -159,6 +161,14 @@ public class SpellManager : MonoBehaviour
                 //Implement triple trouble spell
                 break;
         }
+
+        if (currentCastableSpell == SpellTypes.None)
+        {
+            spellFailureEvent?.Invoke();
+        } else {
+            spellSuccessEvent?.Invoke();
+        }
+
         currentCastableSpell = SpellTypes.None;
         spellCombo.Clear();
         onRunesChanged?.Invoke(spellCombo);
