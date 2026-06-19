@@ -35,7 +35,7 @@ public class EnemyScript : MonoBehaviour
     {
         SpellManager.Instance.EnemyKilled(enemyType);
         GameManager.Instance.RemoveFromEnemyList(gameObject);
-        AudioManager.Instance.playKillSound();
+        AudioManager.Instance.PlayKillSound();
         Destroy(gameObject);
     }
 

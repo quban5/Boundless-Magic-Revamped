@@ -75,10 +75,10 @@ public class GameManager : MonoBehaviour
 
         if (isMainScene)
         {
-            AudioManager.Instance.playMainTheme();
+            AudioManager.Instance.PlayMainTheme();
         } else
         {
-            AudioManager.Instance.playTitleTheme();
+            AudioManager.Instance.PlayTitleTheme();
         }
     }
 

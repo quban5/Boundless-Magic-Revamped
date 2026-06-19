@@ -34,45 +34,55 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.gameOverEvent += playTitleTheme;
-        GameManager.startRunEvent += playMainTheme;
-        GameManager.startRunEvent += playStartSound;
-        SpellManager.spellSuccessEvent += playSpellCastSound;
-        SpellManager.spellFailureEvent += playKillSound;
-        SpellManager.setActiveSpellTextEvent += playShootSound;
+        GameManager.gameOverEvent += PlayTitleTheme;
+        GameManager.startRunEvent += PlayMainTheme;
+        GameManager.startRunEvent += PlayStartSound;
+        SpellManager.spellSuccessEvent += PlaySpellCastSound;
+        SpellManager.spellFailureEvent += PlayKillSound;
+        SpellManager.setActiveSpellTextEvent += PlayShootSound;
     }
-    public void playStartSound()
+    public void PlayStartSound()
     {
         sfxSource.PlayOneShot(startSfx);
     }
-    public void playShootSound()
+    public void PlayShootSound()
     {
         sfxSource.PlayOneShot(shootSfx);
     }
-    public void playKillSound()
+    public void PlayKillSound()
     {
         sfxSource.PlayOneShot(killSfx);
     }
-    public void playShootSound(int i, string s)
+    public void PlayShootSound(int i, string s)
     {
         sfxSource.PlayOneShot(shootSfx);
     }
-    public void playSpellCastSound()
+    public void PlaySpellCastSound()
     {
         sfxSource.PlayOneShot(spellCastSfx);
     }
-    public void playSpellSetSound()
+    public void PlaySpellSetSound()
     {
         sfxSource.PlayOneShot(spellSetSfx);
     }
-    public void playTitleTheme()
+    public void PlayTitleTheme()
     {
         musicSource.clip = titleTheme;
         musicSource.Play();
     }
-    public void playMainTheme()
+    public void PlayMainTheme()
     {
         musicSource.clip = mainTheme;
         musicSource.Play();
+    }
+
+    private void OnDisable()
+    {
+        GameManager.gameOverEvent -= PlayTitleTheme;
+        GameManager.startRunEvent -= PlayMainTheme;
+        GameManager.startRunEvent -= PlayStartSound;
+        SpellManager.spellSuccessEvent -= PlaySpellCastSound;
+        SpellManager.spellFailureEvent -= PlayKillSound;
+        SpellManager.setActiveSpellTextEvent -= PlayShootSound;
     }
 }

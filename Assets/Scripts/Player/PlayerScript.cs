@@ -199,7 +199,7 @@ public class PlayerScript : MonoBehaviour
             GameObject newBullet = Instantiate(projectilePrefab, transform.position, transform.rotation);
             ProjectileScript projectileScript = newBullet.GetComponent<ProjectileScript>();
             projectileScript.AddSpeed(GameManager.Instance.horizontalSpeed + 5f);
-            AudioManager.Instance.playShootSound();
+            AudioManager.Instance.PlayShootSound();
         }
     }
 
