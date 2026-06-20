@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     }
     public static event Action gameOverEvent;
     public static event Action startRunEvent;
+    public static event Action returnToTitleScreenEvent;
     [Header("Player")]
     [SerializeField] private PlayerScript playerScript;
     [Header("Movement Settings")]
@@ -46,6 +47,8 @@ public class GameManager : MonoBehaviour
     [Header("Score")]
     [SerializeField] private float score;
 
+    private bool justLoaded;
+
     private bool isMainScene;
     public static class SceneNames
     {
@@ -66,6 +69,7 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         isMainScene = scene.name == SceneNames.main;
+        justLoaded = true;
     }
 
     void Start()
@@ -90,12 +94,19 @@ public class GameManager : MonoBehaviour
             {
                 IncreaseSpeed();
             }
-            
+
             if (PlayerInputManager.Instance.restartClicked)
             {
                 string currentScene = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene(currentScene);
             }
+        } else
+        {
+            if (!justLoaded)
+            {
+                returnToTitleScreenEvent?.Invoke();
+            }
+            justLoaded = false;
         }
     }
 

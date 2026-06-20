@@ -26,7 +26,6 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip shootSfx;
     [SerializeField] private AudioClip killSfx;
     [SerializeField] private AudioClip spellCastSfx;
-    [SerializeField] private AudioClip spellSetSfx;
 
     [Header("Music")]
     [SerializeField] private AudioClip titleTheme;
@@ -39,7 +38,6 @@ public class AudioManager : MonoBehaviour
         GameManager.startRunEvent += PlayStartSound;
         SpellManager.spellSuccessEvent += PlaySpellCastSound;
         SpellManager.spellFailureEvent += PlayKillSound;
-        SpellManager.setActiveSpellTextEvent += PlayShootSound;
     }
     public void PlayStartSound()
     {
@@ -61,10 +59,6 @@ public class AudioManager : MonoBehaviour
     {
         sfxSource.PlayOneShot(spellCastSfx);
     }
-    public void PlaySpellSetSound()
-    {
-        sfxSource.PlayOneShot(spellSetSfx);
-    }
     public void PlayTitleTheme()
     {
         musicSource.clip = titleTheme;
@@ -83,6 +77,5 @@ public class AudioManager : MonoBehaviour
         GameManager.startRunEvent -= PlayStartSound;
         SpellManager.spellSuccessEvent -= PlaySpellCastSound;
         SpellManager.spellFailureEvent -= PlayKillSound;
-        SpellManager.setActiveSpellTextEvent -= PlayShootSound;
     }
 }

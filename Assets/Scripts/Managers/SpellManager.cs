@@ -68,6 +68,7 @@ public class SpellManager : MonoBehaviour
     private void Start()
     {
         GameManager.gameOverEvent += spellCombo.Clear;
+        GameManager.returnToTitleScreenEvent += SetActiveSpellTexts;
 
         unlockedSpells.Add(SpellTypes.Invulnerability, true);
         unlockedSpells.Add(SpellTypes.Fireball, false);
@@ -129,6 +130,16 @@ public class SpellManager : MonoBehaviour
         setActiveSpellTextEvent?.Invoke(spell, activeSpellTypes[spell].ToString());
     }
 
+    public void SetActiveSpellTexts()
+    {
+        int i = 0;
+        foreach (SpellTypes spellType in activeSpellTypes)
+        {
+            setActiveSpellTextEvent?.Invoke(i, spellType.ToString());
+            i++;
+        }
+    }
+
     public void CastSpell()
     {
         switch (currentCastableSpell)
@@ -165,12 +176,14 @@ public class SpellManager : MonoBehaviour
         if (currentCastableSpell == SpellTypes.None)
         {
             spellFailureEvent?.Invoke();
-        } else {
+            spellCombo.Clear();
+        }
+        else
+        {
             spellSuccessEvent?.Invoke();
         }
 
         currentCastableSpell = SpellTypes.None;
-        spellCombo.Clear();
         onRunesChanged?.Invoke(spellCombo);
         spellCastedEvent?.Invoke();
     }

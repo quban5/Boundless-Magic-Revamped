@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    //Components
+    [Header("Components")]
     [SerializeField] private SpriteRenderer spriteRenderer;
 
     [Header("Movement")]
@@ -18,6 +18,10 @@ public class PlayerScript : MonoBehaviour
 
     [Header("Invincibility")]
     [SerializeField] private float invincibilityDuration;
+
+    [Header("Grace")]
+    [SerializeField] private float gracePeriod;
+    [SerializeField] private float graceTimer;
 
     [Header("Powerups")]
     [SerializeField] private float timeSlowDuration;
@@ -73,6 +77,7 @@ public class PlayerScript : MonoBehaviour
             Movement();
             Shooting();
             CalculateTimeSlow();
+            CalculateGraceTimer();
         }
     }
 
@@ -82,7 +87,15 @@ public class PlayerScript : MonoBehaviour
         timeSlowTimer = timeSlowDuration;
     }
 
-   private void CalculateTimeSlow()
+    private void CalculateGraceTimer()
+    {
+        if (graceTimer > 0)
+        {
+            graceTimer -= Time.deltaTime;
+        }
+    }
+
+    private void CalculateTimeSlow()
     {
         if (timeSlowActivated)
         {
@@ -151,7 +164,8 @@ public class PlayerScript : MonoBehaviour
             if ((int)layerPosition > 0)
             {
                 layerPosition -= 1;
-            } else
+            }
+            else
             {
                 layerPosition = layerPositions.OutOfBoundsTop;
             }
@@ -162,7 +176,8 @@ public class PlayerScript : MonoBehaviour
             if ((int)layerPosition < 3)
             {
                 layerPosition += 1;
-            } else
+            }
+            else
             {
                 layerPosition = layerPositions.OutOfBoundsBottom;
             }
@@ -175,10 +190,10 @@ public class PlayerScript : MonoBehaviour
 
         if (layerPosition == layerPositions.OutOfBoundsBottom)
         {
-            if (currentPos.y-0.5f < layerPositionValues[(int)layerPositions.OutOfBoundsBottom])
+            if (currentPos.y - 0.5f < layerPositionValues[(int)layerPositions.OutOfBoundsBottom])
             {
                 layerPosition = layerPositions.Top;
-                transform.position = new Vector3(currentPos.x,layerPositionValues[(int)layerPositions.OutOfBoundsTop]);
+                transform.position = new Vector3(currentPos.x, layerPositionValues[(int)layerPositions.OutOfBoundsTop]);
             }
         }
 
@@ -209,57 +224,6 @@ public class PlayerScript : MonoBehaviour
     }
 
     private Coroutine invincibilityCoroutine;
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            EnemyScript enemyScript = collision.gameObject.GetComponent<EnemyScript>();
-            if (!invincible)
-            {
-                if (swordActive)
-                {
-                    enemyScript?.DestroyEnemy();
-                    GameManager.Instance.AddScore(2);
-                }
-                else if (shieldActive)
-                {
-                    DeactivateShield();
-                    enemyScript?.DestroyEnemy();
-                    GameManager.Instance.AddScore(2);
-                }
-                else
-                {
-                    Die();
-                }
-            }
-        }
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            if (!invincible)
-            {
-                if (shieldActive)
-                {
-                    Destroy(collision.gameObject);
-                    GameManager.Instance.AddScore(1);
-                }
-                else if (swordActive)
-                {
-                    DeactivateSword();
-                    Destroy(collision.gameObject);
-                    GameManager.Instance.AddScore(1);
-                }
-                else
-                {
-                    Die();
-                }
-            }
-        }
-        if (collision.gameObject.CompareTag("SpawnChunkTrigger"))
-        {
-            ChunkManager.Instance.SpawnChunk();
-        }
-    }
 
     private void OnDestroy()
     {
@@ -292,18 +256,18 @@ public class PlayerScript : MonoBehaviour
         spriteRenderer.color = Color.gray;
 
         float warningDuration = 2f;
-        float blinkInterval = 0.2f; 
+        float blinkInterval = 0.2f;
 
         if (invincibilityDuration > warningDuration)
         {
             yield return new WaitForSeconds(invincibilityDuration - warningDuration);
         }
 
- 
+
         float elapsed = 0f;
         while (elapsed < warningDuration)
         {
-         
+
             if (spriteRenderer.color == Color.gray)
                 spriteRenderer.color = Color.white;
             else
@@ -313,9 +277,70 @@ public class PlayerScript : MonoBehaviour
             elapsed += blinkInterval;
         }
 
-        
+
         invincible = false;
         spriteRenderer.color = Color.white;
         invincibilityCoroutine = null;
+    }
+
+    private void OnDamaged(bool inner)
+    {
+        if (inner || graceTimer > 0)
+        {
+            Die();
+        } else {
+            graceTimer = gracePeriod;
+        } 
+    }
+
+    public void OnCollision(Collider2D collision, bool inner)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            EnemyScript enemyScript = collision.gameObject.GetComponent<EnemyScript>();
+            if (!invincible)
+            {
+                if (swordActive)
+                {
+                    enemyScript?.DestroyEnemy();
+                    GameManager.Instance.AddScore(2);
+                }
+                else if (shieldActive)
+                {
+                    DeactivateShield();
+                    enemyScript?.DestroyEnemy();
+                    GameManager.Instance.AddScore(2);
+                }
+                else
+                {
+                    OnDamaged(inner);
+                }
+            }
+        }
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            if (!invincible)
+            {
+                if (shieldActive)
+                {
+                    Destroy(collision.gameObject);
+                    GameManager.Instance.AddScore(1);
+                }
+                else if (swordActive)
+                {
+                    DeactivateSword();
+                    Destroy(collision.gameObject);
+                    GameManager.Instance.AddScore(1);
+                }
+                else
+                {
+                    OnDamaged(inner);
+                }
+            }
+        }
+        if (collision.gameObject.CompareTag("SpawnChunkTrigger"))
+        {
+            ChunkManager.Instance.SpawnChunk();
+        }
     }
 }
