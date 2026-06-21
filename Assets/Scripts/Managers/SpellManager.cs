@@ -304,6 +304,7 @@ public class SpellManager : MonoBehaviour
             {
                 currentCastableSpell = activeSpellTypes[i];
                 onSpellReadyToCast?.Invoke(currentCastableSpell);
+                spellCombo.Clear();
             }
             i++;
         }
