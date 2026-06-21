@@ -27,7 +27,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] public float initialHorizontalSpeed;
     public float horizontalSpeed;
     [SerializeField] private float speedIncrease = 0.1f;
-    [Serializable] public struct SpeedCaps
+    [Serializable]
+    public struct SpeedCaps
     {
         [Tooltip("Number of chunk loop iterations required for speed increase")]
         public int requiredNumberOfChunkLoopIterations;
@@ -80,7 +81,8 @@ public class GameManager : MonoBehaviour
         if (isMainScene)
         {
             AudioManager.Instance.PlayMainTheme();
-        } else
+        }
+        else
         {
             AudioManager.Instance.PlayTitleTheme();
         }
@@ -100,7 +102,8 @@ public class GameManager : MonoBehaviour
                 string currentScene = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene(currentScene);
             }
-        } else
+        }
+        else
         {
             if (!justLoaded)
             {
@@ -134,7 +137,7 @@ public class GameManager : MonoBehaviour
         if (horizontalSpeed < currentTargetSpeedCap)
         {
             horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, currentTargetSpeedCap, speedIncrease * Time.deltaTime);
-         }
+        }
         else if (horizontalSpeed == maxSpeedLimit)
         {
             isMaxSpeedReached = true;
@@ -156,7 +159,7 @@ public class GameManager : MonoBehaviour
     {
         return horizontalSpeed * timeSlowScale;
     }
-    
+
     public void ResetHorizontalSpeed()
     {
         horizontalSpeed = initialHorizontalSpeed;
@@ -209,5 +212,15 @@ public class GameManager : MonoBehaviour
     {
         SpellManager.curseEvent -= Curse;
         ChunkManager.checkSpeedCapsEvent -= CheckSpeedCaps;
+    }
+
+    public void PauseTime()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void UnpauseTime()
+    {
+        Time.timeScale = 1;
     }
 }

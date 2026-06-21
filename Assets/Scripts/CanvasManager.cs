@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Collections;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -12,6 +13,11 @@ public class CanvasManager : MonoBehaviour
     [Header("Active Spells")]
     [SerializeField] private TMP_Text[] activeSpellNames;
     [SerializeField] private Image[] activeSpellRuneSymbols;
+
+    [Header("Pausing")]
+    [SerializeField] private GameObject pauseScreen;
+    [SerializeField] private GameObject UIScreen;
+    [SerializeField] private TMP_Text unpauseCounter;
 
     void Start()
     {
@@ -57,5 +63,37 @@ public class CanvasManager : MonoBehaviour
     {
         //Set the score text
         scoreText.text = "Score: " + GameManager.Instance.GetScore().ToString();
+    }
+
+    public void OnPause()
+    {
+        UIScreen.SetActive(false);
+        pauseScreen.SetActive(true);
+        GameManager.Instance.PauseTime();
+    }
+
+    public void OnResume()
+    {
+        pauseScreen.SetActive(false);
+        UIScreen.SetActive(true);
+        unpauseCounter.gameObject.SetActive(true);
+        StartCoroutine(UnpauseCounter());
+    }
+
+    IEnumerator UnpauseCounter()
+    {
+        unpauseCounter.text = "3";
+        yield return new WaitForSecondsRealtime(1);
+        unpauseCounter.text = "2";
+        yield return new WaitForSecondsRealtime(1);
+        unpauseCounter.text = "1";
+        yield return new WaitForSecondsRealtime(1);
+        unpauseCounter.gameObject.SetActive(false);
+        GameManager.Instance.UnpauseTime();
+    }
+
+    public void OnExit()
+    {
+        GameManager.Instance.GameOver();
     }
 }
