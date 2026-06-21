@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using static SpellManager;
 using TMPro;
 using System;
+using Unity.VisualScripting;
 
 public class MainMenuCanvasScript : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class MainMenuCanvasScript : MonoBehaviour
     private Dictionary<RuneTypes, Sprite> runeSprites = new Dictionary<RuneTypes, Sprite>();
     [SerializeField] private Button startButton;
     public event Action<int> activeSpellChangedEvent;
+
+    [Header("Screens")]
+    [SerializeField] private GameObject spellSelectScreen;
+    [SerializeField] private GameObject creditsScreen;
+    [SerializeField] private GameObject titleScreen;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -74,8 +80,29 @@ public class MainMenuCanvasScript : MonoBehaviour
         activeSpellChangedEvent?.Invoke(index);
     }
 
-    public void SetActiveSpellText(int index,string text)
-    {         
+    public void SetActiveSpellText(int index, string text)
+    {
         spellNames[index].text = text;
+    }
+
+    public void GoToSpellSelect()
+    {
+        titleScreen.SetActive(false);
+        spellSelectScreen.SetActive(true);
+    }
+    public void GoToCredits()
+    {
+        titleScreen.SetActive(false);
+        creditsScreen.SetActive(true);
+    }
+    public void GoToTitleScreen()
+    {
+        titleScreen.SetActive(true);
+        spellSelectScreen.SetActive(false);
+        creditsScreen.SetActive(false);
+    }
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }
