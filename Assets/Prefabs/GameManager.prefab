@@ -112,7 +112,7 @@ MonoBehaviour:
   - {fileID: 526171442341463024, guid: 873be6858d64e4e459fc19d7cef0090e, type: 3}
   rewardChunkList:
   - {fileID: 526171442341463024, guid: d621c89a3cbb60c46bec925409288ee0, type: 3}
-  chunkLoopOrder: 000000000100000002000000030000000100000002000000000000000100000002000000
+  chunkLoopOrder: 000000000100000002000000000000000100000002000000000000000100000002000000
   chunkSpawnPos: {x: 8.36, y: 0, z: 0}
   spawnedChunks: []
 --- !u!114 &4641583260551929100
@@ -133,7 +133,6 @@ MonoBehaviour:
   shootSfx: {fileID: 8300000, guid: 01b7484da090dbc44a49777c40d2a7c3, type: 3}
   killSfx: {fileID: 8300000, guid: 18ec4e17f4bc30546ad4e2240bb660e9, type: 3}
   spellCastSfx: {fileID: 8300000, guid: 9e4742c8d3d5c5949a17c90277335a9a, type: 3}
-  spellSetSfx: {fileID: 0}
   titleTheme: {fileID: 8300000, guid: cd9e87a6e4b0cbd4fa2ceb42eda454d8, type: 3}
   mainTheme: {fileID: 8300000, guid: 216fc5abadc03cd4aaf1a2fefe213b8f, type: 3}
 --- !u!82 &5027524776777965312
