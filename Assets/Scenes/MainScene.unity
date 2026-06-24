@@ -6783,6 +6783,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b9a2e18ea927f347b220c88ef4c2862, type: 3}
+--- !u!1 &536612759 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 526171442341463024, guid: 9b9a2e18ea927f347b220c88ef4c2862, type: 3}
+  m_PrefabInstance: {fileID: 536612758}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &538130669
 GameObject:
   m_ObjectHideFlags: 0
@@ -19580,6 +19585,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8931416175326404652, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
+      propertyPath: initialChunk
+      value: 
+      objectReference: {fileID: 536612759}
     - target: {fileID: 3215168144079186006, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
       propertyPath: m_Name
       value: GameManager

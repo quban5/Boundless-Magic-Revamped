@@ -5,6 +5,7 @@ using static SpellManager;
 using TMPro;
 using System;
 using Unity.VisualScripting;
+using JetBrains.Annotations;
 
 public class MainMenuCanvasScript : MonoBehaviour
 {
