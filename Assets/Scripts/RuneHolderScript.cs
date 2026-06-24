@@ -92,21 +92,27 @@ public class RuneHolderScript : MonoBehaviour
         switch (spellType)
         {
             case SpellManager.SpellTypes.Fireball:
+                successParticles.Play();
                 spellIconRenderer.sprite = fireballSpellIcon;
                 break;
             case SpellManager.SpellTypes.Invulnerability:
+                successParticles.Play();
                 spellIconRenderer.sprite = invulnerabilitySpellIcon;
                 break;
             case SpellManager.SpellTypes.TimeSlow:
+                successParticles.Play();
                 spellIconRenderer.sprite = timeslowSpellIcon;
                 break;
             case SpellManager.SpellTypes.Shield:
+                successParticles.Play();
                 spellIconRenderer.sprite = shieldSpellIcon;
                 break;
             case SpellManager.SpellTypes.Sword:
+                successParticles.Play();
                 spellIconRenderer.sprite = swordSpellIcon;
                 break;
             case SpellManager.SpellTypes.Curse:
+                successParticles.Play();
                 spellIconRenderer.sprite = curseSpellIcon;
                 break;
         }
@@ -116,7 +122,7 @@ public class RuneHolderScript : MonoBehaviour
     {
         if (spellIconRenderer.gameObject.activeSelf) 
         {
-            successParticles.Play();
+            failureParticles.Play();
         } else
         {
             failureParticles.Play();
