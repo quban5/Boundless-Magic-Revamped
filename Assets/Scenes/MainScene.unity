@@ -8078,6 +8078,8 @@ MonoBehaviour:
   fireballPrefab: {fileID: 6968994161513268655, guid: dfda97f7cd3469242a44698d217c9d18, type: 3}
   invincibilityDuration: 6
   gracePeriod: 5
+  graceSprite: {fileID: 21300000, guid: 73b9ebebc0a566e4d9c8ced5f679206c, type: 3}
+  normalSprite: {fileID: 21300000, guid: 3662942a7fe75cc4b826b20b6b392e91, type: 3}
   graceTimer: 0
   timeSlowDuration: 6
   timeSlowMinScale: 0.25

@@ -21,6 +21,8 @@ public class PlayerScript : MonoBehaviour
 
     [Header("Grace")]
     [SerializeField] private float gracePeriod;
+    [SerializeField] Sprite graceSprite;
+    [SerializeField] Sprite normalSprite;
     [SerializeField] private float graceTimer;
 
     [Header("Powerups")]
@@ -92,6 +94,11 @@ public class PlayerScript : MonoBehaviour
         if (graceTimer > 0)
         {
             graceTimer -= Time.deltaTime;
+            gameObject.GetComponent<SpriteRenderer>().sprite = graceSprite;
+        }
+        else
+        {
+            gameObject.GetComponent<SpriteRenderer>().sprite = normalSprite;
         }
     }
 
