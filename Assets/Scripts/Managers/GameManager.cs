@@ -135,6 +135,7 @@ public class GameManager : MonoBehaviour
 
     private void Curse()
     {
+        transform.GetChild(0).gameObject.SetActive(false);
         foreach (GameObject enemy in enemyList)
         {
             Destroy(enemy);
