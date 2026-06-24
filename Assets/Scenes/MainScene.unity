@@ -7117,6 +7117,7 @@ GameObject:
   - component: {fileID: 837008201}
   - component: {fileID: 837008200}
   - component: {fileID: 837008199}
+  - component: {fileID: 837008202}
   m_Layer: 5
   m_Name: Spell_cast
   m_TagString: Untagged
@@ -7186,7 +7187,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 837008200}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 837008202}
+        m_TargetAssemblyTypeName: SpellButton, Assembly-CSharp
+        m_MethodName: TriggerCastSpell
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &837008200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7225,6 +7238,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 837008197}
   m_CullTransparentMesh: 1
+--- !u!114 &837008202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837008197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfe4f2d9b0aa39547b4b2fc62db580d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpellButton
 --- !u!1 &885379922
 GameObject:
   m_ObjectHideFlags: 0

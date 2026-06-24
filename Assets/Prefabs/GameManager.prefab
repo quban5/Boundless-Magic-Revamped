@@ -114,7 +114,7 @@ MonoBehaviour:
   rewardChunkList:
   - {fileID: 526171442341463024, guid: d621c89a3cbb60c46bec925409288ee0, type: 3}
   chunkLoopOrder: 000000000100000002000000000000000100000002000000000000000100000002000000
-  chunkSpawnPos: {x: 8.36, y: 0, z: 0}
+  chunkSpawnPos: {x: 10, y: 0, z: 0}
   spawnedChunks: []
 --- !u!114 &4641583260551929100
 MonoBehaviour:
@@ -149,6 +149,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialScript
   TutorialChunk: {fileID: 526171442341463024, guid: 7098de6241079f141a513d4dc8f4f751, type: 3}
+  swipeTutorial: {fileID: 8040747786348628750, guid: d807ef4b3b45933479f1a9f8ad1bd17f, type: 3}
+  dodgeTutorial: {fileID: 8040747786348628750, guid: 573ae1fa043205246bf616bbf64abe6a, type: 3}
+  shootTutorial: {fileID: 8040747786348628750, guid: 79fb5df3d1df5fa458598418e341a317, type: 3}
+  spellTutorial: {fileID: 8040747786348628750, guid: 306e00f86c49fe24c941989007e9326e, type: 3}
+  endTutorial: {fileID: 8040747786348628750, guid: d451f1550b0532140a2b8d5d10f9a731, type: 3}
 --- !u!82 &5027524776777965312
 AudioSource:
   m_ObjectHideFlags: 0

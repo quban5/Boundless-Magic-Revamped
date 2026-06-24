@@ -35,7 +35,16 @@ public class TutorialTriggerScript : MonoBehaviour
                 case "ShowShootTutorial":
                     tutorial.ShowShootTutorial();
                     break;
+
+                case "ShowSpellTutorial":
+                    tutorial.ShowSpellTutorial();
+                    break;
+
+                case "ShowEndTutorial":
+                    tutorial.ShowEndTutorial();
+                    break;
             }
+            Destroy(gameObject);
         }
     }
 }
