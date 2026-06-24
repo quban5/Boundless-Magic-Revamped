@@ -19741,6 +19741,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4641583260551929100, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
+      propertyPath: mainTheme
+      value: 
+      objectReference: {fileID: 8300000, guid: 7076a630422a05a44882712078df1cdc, type: 3}
     - target: {fileID: 5950294348980905676, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
       propertyPath: m_Volume
       value: 0.1
