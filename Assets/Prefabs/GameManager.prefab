@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8764255228637686779}
   - component: {fileID: 1327495247986121059}
   - component: {fileID: 4641583260551929100}
+  - component: {fileID: -8931416175326404652}
   - component: {fileID: 5027524776777965312}
   - component: {fileID: 5950294348980905676}
   m_Layer: 0
@@ -135,6 +136,19 @@ MonoBehaviour:
   spellCastSfx: {fileID: 8300000, guid: 9e4742c8d3d5c5949a17c90277335a9a, type: 3}
   titleTheme: {fileID: 8300000, guid: cd9e87a6e4b0cbd4fa2ceb42eda454d8, type: 3}
   mainTheme: {fileID: 8300000, guid: 216fc5abadc03cd4aaf1a2fefe213b8f, type: 3}
+--- !u!114 &-8931416175326404652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3215168144079186006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02ca6886b42bba3429765b56ffe7e0b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialScript
+  TutorialChunk: {fileID: 526171442341463024, guid: 7098de6241079f141a513d4dc8f4f751, type: 3}
 --- !u!82 &5027524776777965312
 AudioSource:
   m_ObjectHideFlags: 0

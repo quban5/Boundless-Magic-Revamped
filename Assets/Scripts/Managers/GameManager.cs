@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
         Instance = this;
+
+        tutorialScript = GetComponent<TutorialScript>();
     }
     public static event Action gameOverEvent;
     public static event Action startRunEvent;
@@ -50,6 +52,9 @@ public class GameManager : MonoBehaviour
 
     private bool justLoaded;
 
+    private TutorialScript tutorialScript;
+    private bool isTutorialActive;
+
     private bool isMainScene;
     public static class SceneNames
     {
@@ -71,6 +76,11 @@ public class GameManager : MonoBehaviour
     {
         isMainScene = scene.name == SceneNames.main;
         justLoaded = true;
+
+        if (isTutorialActive == true)
+        {
+            tutorialScript.PlayTutorial();
+        }
     }
 
     void Start()
@@ -195,6 +205,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneNames.main);
         startRunEvent?.Invoke();
         horizontalSpeed = initialHorizontalSpeed;
+
+        if (TutorialScript.isTutorialActive)
+        {
+            isTutorialActive = true;
+            Debug.Log("Tutorial active");
+        }
     }
 
     public void GameOver()
@@ -206,6 +222,7 @@ public class GameManager : MonoBehaviour
         currentTargetSpeedCap = initialHorizontalSpeed;
         isMaxSpeedReached = false;
         enemyList.Clear();
+        isTutorialActive = false;
         SceneManager.LoadScene(SceneNames.titleScreen);
     }
     private void OnDestroy()
