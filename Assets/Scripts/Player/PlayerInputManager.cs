@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.EventSystems;
 
 public class PlayerInputManager : MonoBehaviour
 {
@@ -14,9 +15,12 @@ public class PlayerInputManager : MonoBehaviour
 
     private bool swipeUp;
     private bool swipeDown;
+    private bool tapShoot;
+
+    private bool isTouchOverUI;
 
     //public bool JumpPressed => actions.Player.Jump.IsPressed();
-    public bool ShootClicked => actions.Player.Shoot.WasPressedThisFrame();
+    public bool ShootClicked => tapShoot || actions.Player.Shoot.WasPressedThisFrame();
     public bool restartClicked => actions.Player.Restart.WasPressedThisFrame();
     public bool downClicked => swipeDown || (actions.Player.Move.ReadValue<Vector2>().y < 0 && actions.Player.Move.WasPressedThisFrame());
     public bool upClicked => swipeUp || (actions.Player.Move.ReadValue<Vector2>().y > 0 && actions.Player.Move.WasPressedThisFrame());
@@ -52,6 +56,7 @@ public class PlayerInputManager : MonoBehaviour
     {
         swipeUp = false;
         swipeDown = false;
+        tapShoot = false;
     }
 
     private void HandleTouchInput()
@@ -62,15 +67,30 @@ public class PlayerInputManager : MonoBehaviour
 
         if (touch.press.wasPressedThisFrame) 
         {
-            firstPosition = touch.position.ReadValue();
-            lastPosition = touch.position.ReadValue();
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.touchId.ReadValue()))
+            {
+                isTouchOverUI = true;
+            }
+            else
+            {
+                isTouchOverUI = false;
+                firstPosition = touch.position.ReadValue();
+                lastPosition = touch.position.ReadValue();
+            }
         }
         else if (touch.press.isPressed) 
         {
+            if (isTouchOverUI) return;
             lastPosition = touch.position.ReadValue();
         }
         else if (touch.press.wasReleasedThisFrame) 
         {
+            if (isTouchOverUI)
+            {
+                isTouchOverUI = false;
+                return;
+            }
+
             lastPosition = touch.position.ReadValue();
 
             if (Mathf.Abs(lastPosition.y - firstPosition.y) > dragDistance)
@@ -88,7 +108,8 @@ public class PlayerInputManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Tap");
+                Debug.Log("Shoot");
+                tapShoot = true;
             }
         }
     }
