@@ -16,6 +16,7 @@ public class PlayerInputManager : MonoBehaviour
     private bool swipeUp;
     private bool swipeDown;
     private bool tapShoot;
+    private bool swipeAvailable = true;
 
     private bool isTouchOverUI;
 
@@ -39,7 +40,7 @@ public class PlayerInputManager : MonoBehaviour
 
     void Start()
     {
-        dragDistance = Screen.height * 12 / 100; //dragDistance is 15% height of the screen
+        dragDistance = Screen.height * 5 / 100; //dragDistance is 15% height of the screen
     } 
 
     private void Update()
@@ -82,18 +83,8 @@ public class PlayerInputManager : MonoBehaviour
         {
             if (isTouchOverUI) return;
             lastPosition = touch.position.ReadValue();
-        }
-        else if (touch.press.wasReleasedThisFrame) 
-        {
-            if (isTouchOverUI)
-            {
-                isTouchOverUI = false;
-                return;
-            }
 
-            lastPosition = touch.position.ReadValue();
-
-            if (Mathf.Abs(lastPosition.y - firstPosition.y) > dragDistance)
+            if (Mathf.Abs(lastPosition.y - firstPosition.y) > dragDistance && swipeAvailable)
             {
                 if (lastPosition.y > firstPosition.y)
                 {
@@ -105,12 +96,27 @@ public class PlayerInputManager : MonoBehaviour
                     Debug.Log("Down Swipe");
                     swipeDown = true; 
                 }
+
+                swipeAvailable = false;
             }
-            else
+        }
+        else if (touch.press.wasReleasedThisFrame) 
+        {
+            if (isTouchOverUI)
             {
-                Debug.Log("Shoot");
-                tapShoot = true;
+                isTouchOverUI = false;
+                return;
             }
+
+            swipeAvailable = true;
+
+            
+
+                if (Mathf.Abs(lastPosition.y - firstPosition.y) < dragDistance)
+                {
+                    Debug.Log("Shoot");
+                    tapShoot = true;
+                }
         }
     }
 
