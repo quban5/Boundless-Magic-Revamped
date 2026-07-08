@@ -19792,8 +19792,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3215168144079186006, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
+      insertIndex: 6
+      addedObject: {fileID: 2807893815484492334}
   m_SourcePrefab: {fileID: 100100000, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
+--- !u!1 &2807893815484492333 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3215168144079186006, guid: ff2f529dae3bca14386a8edc038fe0f7, type: 3}
+  m_PrefabInstance: {fileID: 2807893815484492332}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2807893815484492334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2807893815484492333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1c70926df75274caccb529be3dc1c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  enemyPrefab: {fileID: 7824423365399401821, guid: 7eea833bc1c45fd40bed65893edc087e, type: 3}
 --- !u!1001 &3528253952051953540
 PrefabInstance:
   m_ObjectHideFlags: 0

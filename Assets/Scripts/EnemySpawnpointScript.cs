@@ -30,14 +30,16 @@ public class EnemySpawnpointScript : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        GameObject spawnedEnemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+        GameObject spawnedEnemy = PoolManager.Instance.GetObjectFromPool(enemyPrefab);
+        
+        EnemyScript enemyScript = spawnedEnemy.GetComponent<EnemyScript>();
+        enemyScript.transform.position = transform.position;
 
         if (transform.parent != null)
         {
             spawnedEnemy.transform.SetParent(transform.parent);
         }
-        
-        EnemyScript enemyScript = spawnedEnemy.GetComponent<EnemyScript>();
+
         float randomEnemyType = Random.Range(0f, 1f);
 
         if (randomEnemyType <= runeChanceThresholds[SpellManager.RuneTypes.Red]) {
@@ -47,8 +49,6 @@ public class EnemySpawnpointScript : MonoBehaviour
         } else {
             enemyScript.SetEnemyType(EnemyScript.EnemyTypes.Blue);
         }
-
-
 
         Destroy(gameObject);
     }
