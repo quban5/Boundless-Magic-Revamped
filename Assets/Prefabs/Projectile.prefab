@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileScript
   speed: 15
+  initialSpeed: 15
   lifetime: 3
   projectileType: 0
 --- !u!61 &9150301621966656429

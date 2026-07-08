@@ -71,4 +71,9 @@ public class PoolManager : MonoBehaviour
     {
         return enemyPrefab;
     }
+
+    public GameObject GetProjectilePrefab()
+    {
+        return bulletPrefab;
+    }
 }

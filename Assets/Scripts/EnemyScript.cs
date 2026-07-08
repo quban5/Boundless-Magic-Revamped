@@ -24,19 +24,24 @@ public class EnemyScript : MonoBehaviour
     void Update()
     {
         float playerXPos = GameManager.Instance.GetPlayer().transform.position.x;
+
         if (playerXPos - 5 > transform.position.x)
         {
-            GameManager.Instance.RemoveFromEnemyList(gameObject);
-            Destroy(gameObject);
+            ReturnToPool();
         }
     }
 
     public void DestroyEnemy()
     {
         SpellManager.Instance.EnemyKilled(enemyType);
-        GameManager.Instance.RemoveFromEnemyList(gameObject);
         AudioManager.Instance.PlayKillSound();
-        PoolManager.Instance.ReturnObjectToPool(PoolManager.Instance.GetEnemyPrefab(),gameObject);
+        ReturnToPool();
+    }
+
+    public void ReturnToPool()
+    {
+        GameManager.Instance.RemoveFromEnemyList(gameObject);
+        PoolManager.Instance.ReturnObjectToPool(PoolManager.Instance.GetEnemyPrefab(), gameObject);
     }
 
     public void SetEnemyType(EnemyTypes enemyType)

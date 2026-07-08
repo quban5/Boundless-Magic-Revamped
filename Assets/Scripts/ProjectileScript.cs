@@ -4,6 +4,7 @@ using UnityEngine;
 public class ProjectileScript : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private float initialSpeed;
     [SerializeField] private float lifetime;
     [SerializeField] private ProjectileTypes projectileType;
 
@@ -13,9 +14,10 @@ public class ProjectileScript : MonoBehaviour
         Fireball
     }
 
-    void Start()
+    private void OnEnable()
     {
         StartCoroutine(DeathTimer());
+        speed = initialSpeed;
     }
 
     void Update()
@@ -39,7 +41,7 @@ public class ProjectileScript : MonoBehaviour
 
         if (!collision.gameObject.CompareTag("Player") && projectileType != ProjectileTypes.Fireball)
         {
-            Destroy(gameObject);
+            PoolManager.Instance.ReturnObjectToPool(PoolManager.Instance.GetProjectilePrefab(), gameObject);
         }
     }
 

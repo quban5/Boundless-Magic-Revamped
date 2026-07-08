@@ -218,7 +218,9 @@ public class PlayerScript : MonoBehaviour
     {
         if (PlayerInputManager.Instance.ShootClicked)
         {
-            GameObject newBullet = Instantiate(projectilePrefab, transform.position, transform.rotation);
+            GameObject newBullet = PoolManager.Instance.GetObjectFromPool(PoolManager.Instance.GetProjectilePrefab());
+            newBullet.transform.position = transform.position;
+            newBullet.transform.rotation = transform.rotation;
             ProjectileScript projectileScript = newBullet.GetComponent<ProjectileScript>();
             projectileScript.AddSpeed(GameManager.Instance.horizontalSpeed + 5f);
             AudioManager.Instance.PlayShootSound();
